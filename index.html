@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela do Cozinheiro - Chefe Master</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar hidden">
+    <h2 class="logo">🍕 PIZZARIA DA CIDADE</h2>
+    <nav>
+      <button class="menu-btn active" data-tab="pedidos">Pedidos</button>
+      <button class="menu-btn" data-tab="config">Configurações</button>
+    </nav>
+  </aside>
+
+  <button id="menu-toggle">☰</button>
+
+  <main class="content">
+    <header class="header-wrapper">
+      <div class="header">
+        <button class="status-btn aguardando active" data-status="Aguardando">Aguardando</button>
+        <button class="status-btn preparo" data-status="Em preparo">Em preparo</button>
+        <button class="status-btn finalizados" data-status="Finalizado">Finalizados</button>
+      </div>
+    </header>
+
+    <section id="pedidos" class="pedidos-container">
+      <!-- Os pedidos serão carregados via JS -->
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

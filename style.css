@@ -1,0 +1,241 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: #111;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 230px;
+  background: #222;
+  border-right: 2px solid #f5d76e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+.sidebar.hidden {
+  transform: translateX(-250px);
+}
+
+.logo {
+  color: #f5d76e;
+  font-size: 18px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.menu-btn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: #fff;
+  font-weight: 500;
+  text-align: left;
+  transition: 0.3s;
+  border-radius: 6px;
+}
+
+.menu-btn:hover,
+.menu-btn.active {
+  background: #f5d76e;
+  color: #000;
+}
+
+/* BOTÃO DO MENU */
+#menu-toggle {
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #f5d76e;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 20;
+}
+
+/* CONTEÚDO */
+.content {
+  margin-left: 0;
+  width: 100%;
+  padding: 20px;
+  display: block;
+  transition: margin-left 0.3s ease;
+}
+
+/* HEADER CENTRALIZADO */
+.header-wrapper {
+  display: flex;
+  justify-content: center; /* centraliza horizontalmente */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: center; /* centraliza os botões dentro do header */
+  gap: 10px;
+  flex-wrap: nowrap;
+  max-width: 1200px; /* mesma largura máxima dos cards */
+}
+
+.status-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  color: #111;
+  transition: 0.3s;
+}
+
+.aguardando { background: #d63031; }
+.preparo { background: #f1c40f; }
+.finalizados { background: #2ecc71; }
+
+.status-btn.active {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #f5d76e;
+}
+
+/* CONTAINER DE PEDIDOS */
+.pedidos-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  max-height: 80vh;
+  overflow-y: scroll; /* scrollbar sempre visível */
+  scrollbar-gutter: stable;
+}
+
+.pedidos-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.pedidos-container::-webkit-scrollbar-thumb {
+  background: #f5d76e;
+  border-radius: 5px;
+}
+
+.pedidos-container::-webkit-scrollbar-track {
+  background: #222;
+}
+
+/* CARD DE PEDIDO */
+.card-pedido {
+  background: #222;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  width: 340px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.card-pedido.aguardando { border-top: 4px solid #d63031; }
+.card-pedido.preparo { border-top: 4px solid #f1c40f; }
+.card-pedido.finalizados { border-top: 4px solid #2ecc71; }
+
+/* CABEÇALHO DO CARD */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f5d76e;
+  color: #111;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* PRODUTOS */
+.card-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-right: 5px;
+}
+
+.card-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-content::-webkit-scrollbar-thumb {
+  background: #f5d76e;
+  border-radius: 5px;
+}
+
+.item-pedido {
+  border-bottom: 1px solid #444;
+  padding: 10px 0;
+  margin-top: 8px;
+}
+
+.item-pedido:last-child { border-bottom: none; }
+
+.item-pedido .icone {
+  float: right;
+  opacity: 0.6;
+}
+
+.itens p {
+  font-size: 14px;
+  margin-left: 10px;
+  color: #ddd;
+}
+
+/* BOTÕES DE AÇÃO NO CARD (EMBAIXO) */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  border-top: 1px solid #444;
+  padding-top: 10px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.btn.preparar { background: #f1c40f; color: #111; }
+.btn.cancelar { background: #e74c3c; }
+.btn.voltar { background: #e67e22; }
+.btn.finalizar { background: #27ae60; }
+.btn.entregar { background: #3498db; }
+
+/* HOVER */
+.btn:hover { opacity: 0.9; }
