@@ -7,7 +7,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- SIDEBAR -->
   <aside class="sidebar hidden">
+    <!-- Botão X interno do menu -->
+    <!-- Criado dinamicamente pelo JS -->
     <h2 class="logo">🍕 PIZZARIA DA CIDADE</h2>
     <nav>
       <button class="menu-btn active" data-tab="pedidos">Pedidos</button>
@@ -15,9 +18,12 @@
     </nav>
   </aside>
 
+  <!-- Botão principal do menu -->
   <button id="menu-toggle">☰</button>
 
+  <!-- CONTEÚDO -->
   <main class="content">
+    <!-- Header com filtros de status -->
     <header class="header-wrapper">
       <div class="header">
         <button class="status-btn aguardando active" data-status="Aguardando">Aguardando</button>
@@ -26,8 +32,16 @@
       </div>
     </header>
 
+    <!-- Aba de pedidos -->
     <section id="pedidos" class="pedidos-container">
       <!-- Os pedidos serão carregados via JS -->
+    </section>
+
+    <!-- Aba de configurações -->
+    <section id="config" style="display:none;">
+      <h2>Banco de Dados</h2>
+      <p>Status do Banco: <span id="db-status" class="status-indicator">Desconhecido</span></p>
+      <button id="test-db" class="btn testar">Testar Conexão</button>
     </section>
   </main>
 
