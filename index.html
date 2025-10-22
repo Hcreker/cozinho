@@ -7,10 +7,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- BOTÃO MENU FIXO (fora do header) -->
+  <button id="menu-toggle" class="menu-toggle">☰</button>
+
   <!-- SIDEBAR -->
-  <aside class="sidebar hidden">
-    <!-- Botão X interno do menu -->
-    <!-- Criado dinamicamente pelo JS -->
+  <aside class="sidebar">
+    <button id="menu-close">✕</button>
     <h2 class="logo">🍕 PIZZARIA DA CIDADE</h2>
     <nav>
       <button class="menu-btn active" data-tab="pedidos">Pedidos</button>
@@ -18,10 +21,10 @@
     </nav>
   </aside>
 
-  <!-- Botão principal do menu -->
-  <button id="menu-toggle">☰</button>
+  <!-- Overlay -->
+  <div id="overlay"></div>
 
-  <!-- CONTEÚDO -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="content">
     <!-- Header com filtros de status -->
     <header class="header-wrapper">
@@ -29,6 +32,7 @@
         <button class="status-btn aguardando active" data-status="Aguardando">Aguardando</button>
         <button class="status-btn preparo" data-status="Em preparo">Em preparo</button>
         <button class="status-btn finalizados" data-status="Finalizado">Finalizados</button>
+        <button class="status-btn todos" data-status="Todos">Todos</button>
       </div>
     </header>
 
@@ -38,13 +42,14 @@
     </section>
 
     <!-- Aba de configurações -->
-    <section id="config" style="display:none;">
+    <section id="config" class="config-container" style="display:none;">
       <h2>Banco de Dados</h2>
       <p>Status do Banco: <span id="db-status" class="status-indicator">Desconhecido</span></p>
       <button id="test-db" class="btn testar">Testar Conexão</button>
     </section>
   </main>
 
+  <!-- Script JS -->
   <script src="script.js"></script>
 </body>
 </html>

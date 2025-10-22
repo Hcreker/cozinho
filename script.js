@@ -1,11 +1,18 @@
-// === PEDIDOS ===
+// ===== PEDIDOS =====
 const pedidos = [
   { mesa: 5, cliente: "Ricardo", tempo: 45, status: "Em preparo", produtos: [{ nome: "1x PIZZA MARGUERITA GRANDE", adicionais: ["+ CATUPIRY", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
+  { mesa: 2, cliente: "Ana", tempo: 20, status: "Aguardando", produtos: [{ nome: "1x PIZZA CALABRESA MÉDIA", adicionais: ["+ FINA", "+ DOBRO DO RECHEIO"] }] },
+  { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO"] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
+   { mesa: 5, cliente: "Ricardo", tempo: 45, status: "Em preparo", produtos: [{ nome: "1x PIZZA MARGUERITA GRANDE", adicionais: ["+ CATUPIRY", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
+  { mesa: 2, cliente: "Ana", tempo: 20, status: "Aguardando", produtos: [{ nome: "1x PIZZA CALABRESA MÉDIA", adicionais: ["+ FINA", "+ DOBRO DO RECHEIO"] }] },
+  { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO"] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
+   { mesa: 5, cliente: "Ricardo", tempo: 45, status: "Em preparo", produtos: [{ nome: "1x PIZZA MARGUERITA GRANDE", adicionais: ["+ CATUPIRY", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
   { mesa: 2, cliente: "Ana", tempo: 20, status: "Aguardando", produtos: [{ nome: "1x PIZZA CALABRESA MÉDIA", adicionais: ["+ FINA", "+ DOBRO DO RECHEIO"] }] },
   { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO"] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
   { mesa: 3, cliente: "Carlos", tempo: 50, status: "Finalizado", produtos: [{ nome: "1x PIZZA FRANGO GRANDE", adicionais: ["+ CATUPIRY", "+ FINA"] }] }
 ];
 
+// ===== FUNÇÕES PARA RENDERIZAR =====
 function renderPedidos(filtro = "Aguardando") {
   const container = document.getElementById("pedidos");
   container.innerHTML = "";
@@ -70,90 +77,68 @@ function atualizarContagemBotoes() {
   });
 }
 
-// Funções de ação dos pedidos
+// ===== FUNÇÕES DE AÇÃO =====
 function preparar(i) { pedidos[i].status = "Em preparo"; renderPedidos(document.querySelector(".status-btn.active").getAttribute("data-status")); }
 function cancelar(i) { pedidos.splice(i, 1); renderPedidos(document.querySelector(".status-btn.active").getAttribute("data-status")); }
 function voltarEtapa(i) { pedidos[i].status = pedidos[i].status === "Finalizado" ? "Em preparo" : "Aguardando"; renderPedidos(document.querySelector(".status-btn.active").getAttribute("data-status")); }
 function finalizar(i) { pedidos[i].status = "Finalizado"; renderPedidos(document.querySelector(".status-btn.active").getAttribute("data-status")); }
 function entregar(i) { pedidos.splice(i, 1); renderPedidos(document.querySelector(".status-btn.active").getAttribute("data-status")); }
 
-// --- MENU LATERAL ---
+// ===== MENU LATERAL =====
 const menuToggle = document.getElementById("menu-toggle");
 const sidebar = document.querySelector(".sidebar");
+const overlay = document.getElementById("overlay");
+const menuClose = document.getElementById("menu-close");
 
-// Botão X interno
-let menuClose = document.createElement("button");
-menuClose.id = "menu-close";
-menuClose.textContent = "✕";
-sidebar.prepend(menuClose);
+function toggleMenu(aberto) {
+  if (aberto) {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+    menuToggle.classList.add("hidden"); // some quando abre
+  } else {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+    menuToggle.classList.remove("hidden"); // aparece quando fecha
+  }
+}
 
-menuToggle.addEventListener("click", () => {
-  sidebar.classList.add("active");
-  menuToggle.classList.add("hidden");
-});
+menuToggle.addEventListener("click", () => toggleMenu(true));
+menuClose.addEventListener("click", () => toggleMenu(false));
+overlay.addEventListener("click", () => toggleMenu(false));
 
-menuClose.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  menuToggle.classList.remove("hidden");
-});
-
-// --- MENU LATERAL ABAS ---
-const menuButtons = document.querySelectorAll(".menu-btn");
-menuButtons.forEach(btn => {
+// ===== ABAS DO MENU =====
+document.querySelectorAll(".menu-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    menuButtons.forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
     const tab = btn.getAttribute("data-tab");
-
     document.querySelectorAll("main > section").forEach(sec => sec.style.display = "none");
-
     const abaAtiva = document.getElementById(tab);
-    abaAtiva.style.display = tab === "pedidos" ? "flex" : "flex";
+    abaAtiva.style.display = "flex";
 
     const header = document.querySelector(".header-wrapper");
     header.style.display = tab === "pedidos" ? "flex" : "none";
 
+    // Renderiza pedidos se aba ativa for pedidos
     if(tab === "pedidos") {
-      renderPedidos(document.querySelector(".status-btn.active").getAttribute("data-status"));
+      const statusAtivo = document.querySelector(".status-btn.active").getAttribute("data-status");
+      renderPedidos(statusAtivo);
     }
 
-    if(tab === "config") {
-      const dbStatus = document.getElementById("db-status");
-      const testDbBtn = document.getElementById("test-db");
-
-      function verificarDB() {
-        dbStatus.textContent = "Verificando...";
-        dbStatus.classList.remove("online", "offline");
-        setTimeout(() => {
-          const conectado = Math.random() > 0.3;
-          if(conectado){
-            dbStatus.textContent = "Online";
-            dbStatus.classList.add("online");
-          } else {
-            dbStatus.textContent = "Offline";
-            dbStatus.classList.add("offline");
-          }
-        }, 1000);
-      }
-
-      testDbBtn.replaceWith(testDbBtn.cloneNode(true));
-      document.getElementById("test-db").addEventListener("click", verificarDB);
-      verificarDB();
-    }
+    // O botão do menu agora é controlado apenas pelo toggleMenu()
+    // Nunca forçamos ele a aparecer manualmente aqui
   });
 });
 
-// --- FILTROS STATUS ---
-const botoesStatus = document.querySelectorAll(".status-btn");
-botoesStatus.forEach(btn => {
+// ===== FILTROS DE STATUS =====
+document.querySelectorAll(".status-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    botoesStatus.forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    const status = btn.getAttribute("data-status");
-    renderPedidos(status);
+    renderPedidos(btn.getAttribute("data-status"));
   });
 });
 
-// Render inicial
+// ===== RENDER INICIAL =====
 renderPedidos("Aguardando");
