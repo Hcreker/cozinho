@@ -5,11 +5,11 @@ const pedidos = [
   { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO"] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
    { mesa: 5, cliente: "Ricardo", tempo: 45, status: "Em preparo", produtos: [{ nome: "1x PIZZA MARGUERITA GRANDE", adicionais: ["+ CATUPIRY", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
   { mesa: 2, cliente: "Ana", tempo: 20, status: "Aguardando", produtos: [{ nome: "1x PIZZA CALABRESA MÉDIA", adicionais: ["+ FINA", "+ DOBRO DO RECHEIO"] }] },
-  { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO"] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
+  { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO","+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", "+ DOBRO DO RECHEIO", ] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
    { mesa: 5, cliente: "Ricardo", tempo: 45, status: "Em preparo", produtos: [{ nome: "1x PIZZA MARGUERITA GRANDE", adicionais: ["+ CATUPIRY", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
   { mesa: 2, cliente: "Ana", tempo: 20, status: "Aguardando", produtos: [{ nome: "1x PIZZA CALABRESA MÉDIA", adicionais: ["+ FINA", "+ DOBRO DO RECHEIO"] }] },
   { mesa: 1, cliente: "Ricardo", tempo: 30, status: "Aguardando", produtos: [{ nome: "1x PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEEDAR", "+ FINA", "+ DOBRO DO RECHEIO"] }, { nome: "1x PIZZA CHOCOLATE MÉDIA", adicionais: ["+ CREME DE AVELÃ", "+ FINA", "+ DOBRO DO RECHEIO"] }] },
-  { mesa: 3, cliente: "Carlos", tempo: 50, status: "Finalizado", produtos: [{ nome: "1x PIZZA FRANGO GRANDE", adicionais: ["+ CATUPIRY", "+ FINA"] }] }
+  { mesa: 3, cliente: "Carlos", tempo: 900, status: "Finalizado", produtos: [{ nome: "1x PIZZA FRANGO GRANDE", adicionais: ["+ CATUPIRY"] }] }
 ];
 
 // ===== FUNÇÕES PARA RENDERIZAR =====
@@ -32,29 +32,29 @@ function renderPedidos(filtro = "Aguardando") {
     let botoes = "";
     if (pedido.status === "Aguardando") {
       botoes = `<div class="actions">
-          <button class="btn cancelar" onclick="cancelar(${indexOriginal})">Cancelar ❌</button>
-          <button class="btn preparar" onclick="preparar(${indexOriginal})">Preparar ⟶</button>
+          <button class="btn cancelar" onclick="cancelar(${indexOriginal})">Cancelar</button>
+          <button class="btn preparar" onclick="preparar(${indexOriginal})">Preparar</button>
         </div>`;
     } else if (pedido.status === "Em preparo") {
       botoes = `<div class="actions">
-          <button class="btn voltar" onclick="voltarEtapa(${indexOriginal})">⟵ Voltar etapa</button>
-          <button class="btn finalizar" onclick="finalizar(${indexOriginal})">Finalizar ⟶</button>
+          <button class="btn voltar" onclick="voltarEtapa(${indexOriginal})">Voltar etapa</button>
+          <button class="btn finalizar" onclick="finalizar(${indexOriginal})">Finalizar</button>
         </div>`;
     } else if (pedido.status === "Finalizado") {
       botoes = `<div class="actions">
-          <button class="btn voltar" onclick="voltarEtapa(${indexOriginal})">⟵ Voltar etapa</button>
-          <button class="btn entregar" onclick="entregar(${indexOriginal})">Entregar ✅</button>
+          <button class="btn voltar" onclick="voltarEtapa(${indexOriginal})">Voltar etapa</button>
+          <button class="btn entregar" onclick="entregar(${indexOriginal})">Entregar</button>
         </div>`;
     }
 
     card.innerHTML = `<div class="card-header">
-        <span>🍽️ Mesa ${pedido.mesa} - ${pedido.cliente}</span>
-        <span class="tempo">⏱️ ${pedido.tempo.toString().padStart(2,"0")}:00</span>
+        <span> Mesa ${pedido.mesa} - ${pedido.cliente}</span>
+        <span class="tempo">${pedido.tempo.toString().padStart(2,"0")}:00</span>
       </div>
       <div class="card-content">
         ${pedido.produtos.map(prod => `<div class="item-pedido">
             <strong>${prod.nome}</strong>
-            <span class="icone">📋</span>
+            <span class="icone"></span>
             <div class="itens">
               ${prod.adicionais.map(a => `<p>${a}</p>`).join("")}
             </div>
