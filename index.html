@@ -26,13 +26,31 @@
 
   <!-- CONTEÚDO PRINCIPAL -->
   <main class="content">
-    <!-- Header com filtros de status -->
+    <!-- Header com filtros de status e adicionais -->
     <header class="header-wrapper">
       <div class="header">
         <button class="status-btn aguardando active" data-status="Aguardando">Aguardando</button>
         <button class="status-btn preparo" data-status="Em preparo">Em preparo</button>
         <button class="status-btn finalizados" data-status="Finalizado">Finalizados</button>
         <button class="status-btn todos" data-status="Todos">Todos</button>
+      </div>
+      <!-- Filtros adicionais: mesa e prioridade -->
+      <div class="filtros-adicionais">
+        <label for="mesa-filter">Mesa:</label>
+        <select id="mesa-filter">
+          <option value="Todas">Todas</option>
+          <option value="1">Mesa 1</option>
+          <option value="2">Mesa 2</option>
+          <option value="3">Mesa 3</option>
+          <option value="4">Mesa 4</option>
+          <option value="5">Mesa 5</option>
+        </select>
+
+        <label for="prioridade-filter">Prioridade:</label>
+        <select id="prioridade-filter">
+          <option value="Todos">Todos</option>
+          <option value="Urgente">Urgente</option>
+        </select>
       </div>
     </header>
 
