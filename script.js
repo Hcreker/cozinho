@@ -53,8 +53,6 @@ const pedidos = [
 ];
 
 // ====================== FUNÇÕES ======================
-
-// Marcar item individual como pronto
 function togglePronto(indexPedido, indexProduto) {
   const pedido = pedidos[indexPedido];
   if (pedido.status === "Aguardando") return;
@@ -64,7 +62,6 @@ function togglePronto(indexPedido, indexProduto) {
   item.classList.toggle("pronto");
 }
 
-// Atualiza contagem nos botões
 function atualizarContagemBotoes() {
   const contagens = { "Aguardando": 0, "Em preparo": 0, "Finalizado": 0 };
   pedidos.forEach(p => contagens[p.status]++);
@@ -74,24 +71,29 @@ function atualizarContagemBotoes() {
   document.querySelector(".status-btn.todos").textContent = `Todos (${pedidos.length})`;
 }
 
-// Renderiza pedidos
-function renderPedidos(filtro = "Aguardando") {
-  const container = document.getElementById("pedidos");
+// ====================== RENDER PEDIDOS ======================
+function renderPedidos() {
+  const container = document.getElementById("pedidos-container");
   container.innerHTML = "";
 
-  let pedidosFiltrados = pedidos.filter(p => filtro === "Todos" ? true : p.status === filtro);
-  if (filtro === "Todos") {
+  const statusFiltro = document.querySelector(".status-btn.active")?.dataset.status || "Todos";
+
+  let pedidosFiltrados = pedidos.filter(p => {
+    return statusFiltro === "Todos" ? true : p.status === statusFiltro;
+  });
+
+  if (statusFiltro === "Todos") {
     const ordem = { "Aguardando": 0, "Em preparo": 1, "Finalizado": 2 };
     pedidosFiltrados.sort((a, b) => ordem[a.status] - ordem[b.status]);
   }
 
   if (pedidosFiltrados.length === 0) {
-    container.innerHTML = `<p class="sem-pedidos">Nenhum pedido ${filtro.toLowerCase()}.</p>`;
+    container.innerHTML = `<div class="sem-pedidos">Nenhum pedido no momento</div>`;
     atualizarContagemBotoes();
     return;
   }
 
-  pedidosFiltrados.forEach((pedido) => {
+  pedidosFiltrados.forEach(pedido => {
     const indexOriginal = pedidos.indexOf(pedido);
     const card = document.createElement("div");
     card.classList.add("card-pedido",
@@ -102,18 +104,15 @@ function renderPedidos(filtro = "Aguardando") {
 
     const tempoMin = Math.floor(pedido.tempoSegundos / 60);
     const tempoSec = pedido.tempoSegundos % 60;
-    const tempoStr = tempoMin.toString().padStart(2, "0") + ":" + tempoSec.toString().padStart(2, "0");
+    const tempoStr = tempoMin.toString().padStart(2,"0") + ":" + tempoSec.toString().padStart(2,"0");
 
-    // Juntando bebidas visualmente como adicionais
     const produtosHTML = pedido.produtos.map(prod => {
       const classe = `item-pedido ${prod.pronto ? "pronto" : ""} ${prod.bebida ? "bebida" : ""}`;
       const adicionaisHTML = prod.adicionais.map(a => `<p>${a}</p>`).join("");
       return `
         <div class="${classe}" onclick="togglePronto(${indexOriginal}, ${pedido.produtos.indexOf(prod)})">
           <strong>${prod.nome}</strong>
-          <div class="itens">
-            ${adicionaisHTML}
-          </div>
+          <div class="itens">${adicionaisHTML}</div>
         </div>
       `;
     }).join("");
@@ -128,22 +127,14 @@ function renderPedidos(filtro = "Aguardando") {
       </div>
       ${gerarBotoes(pedido, indexOriginal)}
     `;
-
     container.appendChild(card);
-
-    // Sempre inicia com scroll no topo
-    const content = card.querySelector(".card-content");
-    content.scrollTop = 0;
-
-    // Ativa scroll apenas se necessário
-    if (content.scrollHeight > content.clientHeight) content.style.overflowY = "auto";
-    else content.style.overflowY = "hidden";
   });
 
   atualizarContagemBotoes();
+  setTimeout(atualizarScrollCards, 50);
 }
 
-// Gera botões conforme status do pedido
+// ====================== BOTÕES DE AÇÃO ======================
 function gerarBotoes(pedido, i) {
   if (pedido.status === "Aguardando") {
     return `<div class="actions">
@@ -163,18 +154,24 @@ function gerarBotoes(pedido, i) {
   }
 }
 
+function preparar(i) { pedidos[i].status = "Em preparo"; renderPedidos(); }
+function cancelar(i) { pedidos.splice(i, 1); renderPedidos(); }
+function voltarEtapa(i) { pedidos[i].status = pedidos[i].status === "Finalizado" ? "Em preparo" : "Aguardando"; renderPedidos(); }
+function finalizar(i) { pedidos[i].status = "Finalizado"; renderPedidos(); }
+function entregar(i) { pedidos.splice(i, 1); renderPedidos(); }
+
 // ====================== TIMER ======================
 setInterval(() => {
   pedidos.forEach((p, index) => {
-    if (p.status !== "Finalizado") p.tempoSegundos++;
+    if(p.status !== "Finalizado") p.tempoSegundos++;
     const card = document.querySelector(`.card-pedido[data-index='${index}']`);
-    if (card) {
+    if(card){
       const tempoSpan = card.querySelector(".tempo");
-      const minutos = Math.floor(p.tempoSegundos / 60).toString().padStart(2, "0");
-      const segundos = (p.tempoSegundos % 60).toString().padStart(2, "0");
+      const minutos = Math.floor(p.tempoSegundos/60).toString().padStart(2,"0");
+      const segundos = (p.tempoSegundos % 60).toString().padStart(2,"0");
       tempoSpan.textContent = `${minutos}:${segundos}`;
 
-      if (p.tempoSegundos > (p.tempoEstimado * 60) + 300 && p.status !== "Finalizado") {
+      if(p.tempoSegundos > (p.tempoEstimado*60)+300 && p.status !== "Finalizado") {
         card.classList.add("urgente");
       } else {
         card.classList.remove("urgente");
@@ -183,21 +180,14 @@ setInterval(() => {
   });
 }, 1000);
 
-// ====================== AÇÕES ======================
-function preparar(i) { pedidos[i].status = "Em preparo"; renderPedidos(document.querySelector(".status-btn.active").dataset.status); }
-function cancelar(i) { pedidos.splice(i, 1); renderPedidos(document.querySelector(".status-btn.active").dataset.status); }
-function voltarEtapa(i) { pedidos[i].status = pedidos[i].status === "Finalizado" ? "Em preparo" : "Aguardando"; renderPedidos(document.querySelector(".status-btn.active").dataset.status); }
-function finalizar(i) { pedidos[i].status = "Finalizado"; renderPedidos(document.querySelector(".status-btn.active").dataset.status); }
-function entregar(i) { pedidos.splice(i, 1); renderPedidos(document.querySelector(".status-btn.active").dataset.status); }
-
 // ====================== MENU LATERAL ======================
 const menuToggle = document.getElementById("menu-toggle");
 const sidebar = document.querySelector(".sidebar");
 const overlay = document.getElementById("overlay");
 const menuClose = document.getElementById("menu-close");
 
-function toggleMenu(open) {
-  if (open) {
+function toggleMenu(open){
+  if(open){
     sidebar.classList.add("active");
     overlay.classList.add("active");
     menuToggle.classList.add("hidden");
@@ -212,32 +202,68 @@ menuToggle.addEventListener("click", () => toggleMenu(true));
 menuClose.addEventListener("click", () => toggleMenu(false));
 overlay.addEventListener("click", () => toggleMenu(false));
 
-// ====================== TABS ======================
-document.querySelectorAll(".menu-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    const tab = btn.dataset.tab;
-    document.querySelectorAll("main > section").forEach(sec => sec.style.display = "none");
-    document.getElementById(tab).style.display = "flex";
-    document.querySelector(".header-wrapper").style.display = tab === "pedidos" ? "flex" : "none";
-
-    if (tab === "pedidos") {
-      const filtro = document.querySelector(".status-btn.active").dataset.status;
-      renderPedidos(filtro);
-    }
-  });
-});
-
 // ====================== FILTROS DE STATUS ======================
 document.querySelectorAll(".status-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    renderPedidos(btn.dataset.status);
+    renderPedidos();
   });
 });
 
+// ====================== DROPDOWNS MESAS E PRIORIDADE ======================
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdowns = document.querySelectorAll(".dropdown-wrapper");
+  dropdowns.forEach(wrapper => {
+    const btn = wrapper.querySelector(".dropdown-btn");
+    const content = wrapper.querySelector(".dropdown-content");
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      document.querySelectorAll(".dropdown-content").forEach(c => {
+        if(c !== content) c.style.display = "none";
+      });
+      content.style.display = content.style.display === "flex" ? "none" : "flex";
+    });
+  });
+
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".dropdown-content").forEach(c => c.style.display = "none");
+  });
+});
+
+// ====================== SCROLL INTELIGENTE ======================
+function atualizarScrollCards(){
+  const cards = document.querySelectorAll('.card-content');
+  cards.forEach(card => {
+    card.style.overflowY = 'hidden';
+    const itens = Array.from(card.querySelectorAll('.item-pedido'));
+    if(itens.length===0) return;
+
+    const visibleTop = card.scrollTop;
+    const visibleBottom = visibleTop + card.clientHeight;
+
+    let precisaScroll = false;
+    for(let it of itens){
+      const top = it.offsetTop;
+      const bottom = top + it.offsetHeight;
+      if(top < visibleTop-1 || bottom > visibleBottom+1){
+        precisaScroll = true;
+        break;
+      }
+    }
+
+    if(!precisaScroll && card.scrollHeight > card.clientHeight+1) precisaScroll = true;
+    card.style.overflowY = precisaScroll?'auto':'hidden';
+  });
+}
+
+window.addEventListener('resize', atualizarScrollCards);
+const scrollObserver = new MutationObserver(()=>{requestAnimationFrame(atualizarScrollCards)});
+scrollObserver.observe(document.getElementById('pedidos-container'), {childList:true, subtree:true});
+const ro = new ResizeObserver(()=>atualizarScrollCards());
+document.querySelectorAll('.card-content').forEach(c => ro.observe(c));
+document.addEventListener('DOMContentLoaded', ()=>{setTimeout(atualizarScrollCards,50);});
+
 // ====================== RENDER INICIAL ======================
-renderPedidos("Aguardando");
+renderPedidos();
