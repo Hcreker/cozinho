@@ -1,70 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chef Master</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chef Master</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- BOTÃO MENU FIXO -->
-<button class="menu-toggle" id="menu-toggle">☰ Menu</button>
+  <!-- BOTÃO MENU FIXO -->
+  <button class="menu-toggle" id="menu-toggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-  <button id="menu-close">×</button>
-  <h2 class="logo">Chef Master</h2>
-  <nav>
-    <button class="menu-btn">Dashboard</button>
-    <button class="menu-btn">Pedidos</button>
-    <button class="menu-btn">Configurações</button>
-  </nav>
-</div>
-
-<!-- OVERLAY -->
-<div id="overlay"></div>
-
-<!-- HEADER -->
-<div class="header-wrapper">
-  <div class="header">
-
-    <!-- Botão Mesas Dropdown -->
-    <div class="dropdown-wrapper">
-      <button class="dropdown-btn" id="dropdown-mesas">Mesas</button>
-      <div class="dropdown-content" id="dropdown-mesas-content">
-        <button>Mesa 1</button>
-        <button>Mesa 2</button>
-        <button>Mesa 3</button>
-      </div>
-    </div>
-
-    <!-- Status Buttons -->
-    <button class="status-btn aguardando active" data-status="Aguardando">Aguardando</button>
-    <button class="status-btn preparo" data-status="Em preparo">Em preparo</button>
-    <button class="status-btn finalizados" data-status="Finalizado">Finalizados</button>
-    <button class="status-btn todos" data-status="Todos">Todos</button>
-
-    <!-- Botão Prioridade Dropdown -->
-    <div class="dropdown-wrapper">
-      <button class="dropdown-btn" id="dropdown-prioridade">Prioridade</button>
-      <div class="dropdown-content" id="dropdown-prioridade-content">
-        <button>Urgente</button>
-        <button>Normal</button>
-      </div>
-    </div>
-
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <button id="menu-close">×</button>
+    <h2 class="logo">Chef Master</h2>
+    <nav>
+      <button class="menu-btn">Dashboard</button>
+      <button class="menu-btn">Pedidos</button>
+      <button class="menu-btn">Configurações</button>
+    </nav>
   </div>
-</div>
 
-<!-- CONTEÚDO -->
-<div class="content">
-  <div class="pedidos-container" id="pedidos-container">
-    <!-- Cards de pedidos vão aqui dinamicamente -->
-    <div class="sem-pedidos">Nenhum pedido no momento</div>
+  <!-- OVERLAY -->
+  <div id="overlay"></div>
+
+  <!-- HEADER -->
+  <div class="header-wrapper">
+    <div class="header">
+
+      <!-- Botão Mesas Dropdown -->
+      <div class="dropdown-wrapper">
+        <button class="dropdown-btn" id="dropdown-mesas">Mesas</button>
+        <div class="dropdown-content" id="dropdown-mesas-content">
+          <button>Mesa 1</button>
+          <button>Mesa 2</button>
+          <button>Mesa 3</button>
+        </div>
+      </div>
+
+      <!-- Status Buttons -->
+      <button class="status-btn aguardando active" data-status="Aguardando">Aguardando</button>
+      <button class="status-btn preparo" data-status="Em preparo">Em preparo</button>
+      <button class="status-btn finalizados" data-status="Finalizado">Finalizados</button>
+      <button class="status-btn todos" data-status="Todos">Todos</button>
+
+      <!-- Botão Prioridade Dropdown -->
+      <div class="dropdown-wrapper">
+        <button class="dropdown-btn" id="dropdown-prioridade">Prioridade</button>
+        <div class="dropdown-content" id="dropdown-prioridade-content">
+          <button>Urgente</button>
+          <button>Normal</button>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
 
-<script src="script.js"></script>
+  <!-- CONTEÚDO -->
+  <div class="content">
+    <div class="pedidos-container" id="pedidos-container">
+      <!-- Cards de pedidos vão aqui dinamicamente -->
+      <div class="sem-pedidos">Nenhum pedido no momento</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Liga o botão hambúrguer com a sidebar
+    const menuToggle = document.getElementById("menu-toggle");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const menuClose = document.getElementById("menu-close");
+
+    function toggleMenu(open) {
+      if (open) {
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+        menuToggle.classList.add("active"); // anima o hambúrguer
+      } else {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        menuToggle.classList.remove("active");
+      }
+    }
+
+    menuToggle.addEventListener("click", () => toggleMenu(true));
+    menuClose.addEventListener("click", () => toggleMenu(false));
+    overlay.addEventListener("click", () => toggleMenu(false));
+  </script>
 </body>
 </html>

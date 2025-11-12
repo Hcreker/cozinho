@@ -77,10 +77,7 @@ function renderPedidos() {
   container.innerHTML = "";
 
   const statusFiltro = document.querySelector(".status-btn.active")?.dataset.status || "Todos";
-
-  let pedidosFiltrados = pedidos.filter(p => {
-    return statusFiltro === "Todos" ? true : p.status === statusFiltro;
-  });
+  let pedidosFiltrados = pedidos.filter(p => statusFiltro === "Todos" ? true : p.status === statusFiltro);
 
   if (statusFiltro === "Todos") {
     const ordem = { "Aguardando": 0, "Em preparo": 1, "Finalizado": 2 };
@@ -122,9 +119,7 @@ function renderPedidos() {
         <span>Mesa ${pedido.mesa} - ${pedido.cliente}</span>
         <span class="tempo">${tempoStr}</span>
       </div>
-      <div class="card-content ${pedido.produtos.length === 1 ? "single-item" : ""}">
-        ${produtosHTML}
-      </div>
+      <div class="card-content">${produtosHTML}</div>
       ${gerarBotoes(pedido, indexOriginal)}
     `;
     container.appendChild(card);
@@ -154,116 +149,112 @@ function gerarBotoes(pedido, i) {
   }
 }
 
-function preparar(i) { pedidos[i].status = "Em preparo"; renderPedidos(); }
-function cancelar(i) { pedidos.splice(i, 1); renderPedidos(); }
-function voltarEtapa(i) { pedidos[i].status = pedidos[i].status === "Finalizado" ? "Em preparo" : "Aguardando"; renderPedidos(); }
-function finalizar(i) { pedidos[i].status = "Finalizado"; renderPedidos(); }
-function entregar(i) { pedidos.splice(i, 1); renderPedidos(); }
+function preparar(i){ pedidos[i].status="Em preparo"; renderPedidos(); }
+function cancelar(i){ pedidos.splice(i,1); renderPedidos(); }
+function voltarEtapa(i){ pedidos[i].status=pedidos[i].status==="Finalizado"?"Em preparo":"Aguardando"; renderPedidos(); }
+function finalizar(i){ pedidos[i].status="Finalizado"; renderPedidos(); }
+function entregar(i){ pedidos.splice(i,1); renderPedidos(); }
 
 // ====================== TIMER ======================
-setInterval(() => {
-  pedidos.forEach((p, index) => {
-    if(p.status !== "Finalizado") p.tempoSegundos++;
-    const card = document.querySelector(`.card-pedido[data-index='${index}']`);
+setInterval(()=>{
+  pedidos.forEach((p,index)=>{
+    if(p.status!=="Finalizado") p.tempoSegundos++;
+    const card=document.querySelector(`.card-pedido[data-index='${index}']`);
     if(card){
-      const tempoSpan = card.querySelector(".tempo");
-      const minutos = Math.floor(p.tempoSegundos/60).toString().padStart(2,"0");
-      const segundos = (p.tempoSegundos % 60).toString().padStart(2,"0");
-      tempoSpan.textContent = `${minutos}:${segundos}`;
-
-      if(p.tempoSegundos > (p.tempoEstimado*60)+300 && p.status !== "Finalizado") {
-        card.classList.add("urgente");
-      } else {
-        card.classList.remove("urgente");
-      }
+      const tempoSpan=card.querySelector(".tempo");
+      const minutos=Math.floor(p.tempoSegundos/60).toString().padStart(2,"0");
+      const segundos=(p.tempoSegundos%60).toString().padStart(2,"0");
+      tempoSpan.textContent=`${minutos}:${segundos}`;
+      if(p.tempoSegundos>(p.tempoEstimado*60)+300 && p.status!=="Finalizado") card.classList.add("urgente");
+      else card.classList.remove("urgente");
     }
   });
-}, 1000);
+},1000);
 
 // ====================== MENU LATERAL ======================
-const menuToggle = document.getElementById("menu-toggle");
-const sidebar = document.querySelector(".sidebar");
-const overlay = document.getElementById("overlay");
-const menuClose = document.getElementById("menu-close");
+const menuToggle=document.getElementById("menu-toggle");
+const sidebar=document.querySelector(".sidebar");
+const overlay=document.getElementById("overlay");
+const menuClose=document.getElementById("menu-close");
 
 function toggleMenu(open){
   if(open){
     sidebar.classList.add("active");
     overlay.classList.add("active");
     menuToggle.classList.add("hidden");
-  } else {
+  }else{
     sidebar.classList.remove("active");
     overlay.classList.remove("active");
     menuToggle.classList.remove("hidden");
   }
 }
 
-menuToggle.addEventListener("click", () => toggleMenu(true));
-menuClose.addEventListener("click", () => toggleMenu(false));
-overlay.addEventListener("click", () => toggleMenu(false));
+menuToggle.addEventListener("click",()=>toggleMenu(true));
+menuClose.addEventListener("click",()=>toggleMenu(false));
+overlay.addEventListener("click",()=>toggleMenu(false));
 
 // ====================== FILTROS DE STATUS ======================
-document.querySelectorAll(".status-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
+document.querySelectorAll(".status-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     renderPedidos();
   });
 });
 
 // ====================== DROPDOWNS MESAS E PRIORIDADE ======================
-document.addEventListener("DOMContentLoaded", () => {
-  const dropdowns = document.querySelectorAll(".dropdown-wrapper");
-  dropdowns.forEach(wrapper => {
-    const btn = wrapper.querySelector(".dropdown-btn");
-    const content = wrapper.querySelector(".dropdown-content");
+document.addEventListener("DOMContentLoaded",()=>{
+  const dropdowns=document.querySelectorAll(".dropdown-wrapper");
+  dropdowns.forEach(wrapper=>{
+    const btn=wrapper.querySelector(".dropdown-btn");
+    const content=wrapper.querySelector(".dropdown-content");
 
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click",(e)=>{
       e.stopPropagation();
-      document.querySelectorAll(".dropdown-content").forEach(c => {
-        if(c !== content) c.style.display = "none";
+      document.querySelectorAll(".dropdown-content").forEach(c=>{
+        if(c!==content) c.style.display="none";
       });
-      content.style.display = content.style.display === "flex" ? "none" : "flex";
+      const openNow=content.style.display==="flex";
+      document.querySelectorAll(".dropdown-btn").forEach(b=>b.classList.remove("active-dropdown"));
+      if(!openNow){
+        content.style.display="flex";
+        btn.classList.add("active-dropdown");
+      }else{
+        content.style.display="none";
+      }
     });
   });
 
-  document.addEventListener("click", () => {
-    document.querySelectorAll(".dropdown-content").forEach(c => c.style.display = "none");
+  document.addEventListener("click",()=>{
+    document.querySelectorAll(".dropdown-content").forEach(c=>c.style.display="none");
+    document.querySelectorAll(".dropdown-btn").forEach(b=>b.classList.remove("active-dropdown"));
   });
 });
 
 // ====================== SCROLL INTELIGENTE ======================
 function atualizarScrollCards(){
-  const cards = document.querySelectorAll('.card-content');
-  cards.forEach(card => {
-    card.style.overflowY = 'hidden';
-    const itens = Array.from(card.querySelectorAll('.item-pedido'));
+  const cards=document.querySelectorAll('.card-content');
+  cards.forEach(card=>{
+    card.style.overflowY='hidden';
+    const itens=Array.from(card.querySelectorAll('.item-pedido'));
     if(itens.length===0) return;
-
-    const visibleTop = card.scrollTop;
-    const visibleBottom = visibleTop + card.clientHeight;
-
-    let precisaScroll = false;
+    const visibleTop=card.scrollTop;
+    const visibleBottom=visibleTop+card.clientHeight;
+    let precisaScroll=false;
     for(let it of itens){
-      const top = it.offsetTop;
-      const bottom = top + it.offsetHeight;
-      if(top < visibleTop-1 || bottom > visibleBottom+1){
-        precisaScroll = true;
-        break;
-      }
+      const top=it.offsetTop;
+      const bottom=top+it.offsetHeight;
+      if(top<visibleTop-1 || bottom>visibleBottom+1){precisaScroll=true;break;}
     }
-
-    if(!precisaScroll && card.scrollHeight > card.clientHeight+1) precisaScroll = true;
-    card.style.overflowY = precisaScroll?'auto':'hidden';
+    if(!precisaScroll && card.scrollHeight>card.clientHeight+1) precisaScroll=true;
+    card.style.overflowY=precisaScroll?'auto':'hidden';
   });
 }
 
-window.addEventListener('resize', atualizarScrollCards);
-const scrollObserver = new MutationObserver(()=>{requestAnimationFrame(atualizarScrollCards)});
-scrollObserver.observe(document.getElementById('pedidos-container'), {childList:true, subtree:true});
-const ro = new ResizeObserver(()=>atualizarScrollCards());
-document.querySelectorAll('.card-content').forEach(c => ro.observe(c));
-document.addEventListener('DOMContentLoaded', ()=>{setTimeout(atualizarScrollCards,50);});
+window.addEventListener('resize',atualizarScrollCards);
+const scrollObserver=new MutationObserver(()=>{requestAnimationFrame(atualizarScrollCards)});
+scrollObserver.observe(document.getElementById('pedidos-container'),{childList:true,subtree:true});
+document.addEventListener('DOMContentLoaded',()=>{setTimeout(atualizarScrollCards,50);});
 
 // ====================== RENDER INICIAL ======================
 renderPedidos();
