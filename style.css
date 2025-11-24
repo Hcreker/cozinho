@@ -33,6 +33,7 @@ body {
   gap: 0.8rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   border-bottom: 1px solid rgba(248, 215, 123, 0.397);
+
 }
 
 .header {
@@ -41,13 +42,13 @@ body {
   gap: 1rem;
   flex-wrap: wrap;
   position: relative;
-  padding-left: 25rem; /* espaço da borda esquerda */
+  padding-left: 22.4rem; /* espaço da borda esquerda */
 }
 
 /* ================= BOTÃO MENU FIXO (HAMBÚRGUER DOURADO) ================= */
 .menu-toggle {
   position: fixed;
-  top: 3.5rem; /* alinhado com o header */
+  top: 3.8rem; /* alinhado com o header */
   left: 1.5rem;
   z-index: 1100; /* acima do header e overlay */
   width: 60px;
@@ -116,6 +117,7 @@ body {
   letter-spacing: 0.5px;
   transition: transform 0.2s, filter 0.3s, box-shadow 0.3s;
   box-shadow: 0 0 8px rgba(248, 215, 123, 0.15);
+  width: 187px;
 }
 
 .status-btn::after {
@@ -130,16 +132,16 @@ body {
 
 /* cores padrões */
 .status-btn.aguardando { border-color: #f8d77b; background: linear-gradient(145deg, #b02626, #d9534f); }
-.status-btn.aguardando::after { background: linear-gradient(145deg, #e75b5b, #ff8a8a); }
+.status-btn.aguardando::after { background: linear-gradient(145deg, #e75b5b, #cc1212); }
 
-.status-btn.preparo { border-color: #f8d77b; background: linear-gradient(145deg, #da9342, #f0bd4e); }
-.status-btn.preparo::after { background: linear-gradient(145deg, #f3b66a, #f9d683); }
+.status-btn.preparo { border-color: #f8d77b; background: linear-gradient(145deg, #eea929, #f0bd4e); }
+.status-btn.preparo::after { background: linear-gradient(145deg, #eca650, #f1b23b); }
 
-.status-btn.finalizados { border-color: #f8d77b; background: linear-gradient(145deg, #56bd56, #509450); }
-.status-btn.finalizados::after { background: linear-gradient(145deg, #7ce57c, #91f78d); }
+.status-btn.finalizados { border-color: #f8d77b; background: linear-gradient(145deg, #3b883b, #4fb14f); }
+.status-btn.finalizados::after { background: linear-gradient(145deg, #4fca4f, #258f22); }
 
-.status-btn.todos { border-color: #f8d77b; background: linear-gradient(145deg, #ffd651, #644e11); }
-.status-btn.todos::after { background: linear-gradient(145deg, #ffeb8a, #9e7c1f); }
+.status-btn.todos { border-color: #f8d77b; background: linear-gradient(145deg, #ffd54a, #e9c86f); }
+.status-btn.todos::after { background: linear-gradient(145deg, #ffe979, #9e7c1f); }
 
 .status-btn.active::after {
   opacity: 1;
@@ -162,68 +164,98 @@ body {
   100% { box-shadow: 0 0 10px rgba(248, 215, 123, 0.3); }
 }
 
-/* ================= DROPDOWN WRAPPER ================= */
+/* ================= DROPDOWN WRAPPER (MELHORADO — SUBSTITUI SOMENTE ESTE BLOCO) ================= */
+/* Mantive a mesma estrutura de classes do seu JS: .dropdown-wrapper, .dropdown-btn, .dropdown-content */
+/* Versão minimalista, leve e compatível com seu HTML/JS existente */
 .dropdown-wrapper {
   position: relative;
   display: inline-block;
 }
 
 .dropdown-btn {
-  background: linear-gradient(145deg, #df6b1d, #505050);
+  background: linear-gradient(145deg, #11110f, #69633c);
   color: #f8d77b;
   border: 2px solid #f8d77b;
   padding: 0.8rem 1.5rem;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 10px transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 0 8px rgba(248,215,123,0.06);
+  width: 100%;              /* 🔥 faz o dropdown ter a mesma largura */
+  text-align: center;       /* 🔥 centraliza o texto do botão */
+    width: 120px;  /* Largura fixa */
+
+}
+
+
+
+.dropdown-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(248,215,123,0.08);
 }
 
 .dropdown-btn.active-dropdown {
-  background: linear-gradient(145deg, #1dd9df, #f31c1c);
-  color: #f8d77b;
-  transform: scale(1.07);
-  box-shadow: 0 0 20px rgba(248, 215, 123, 0.7);
-  animation: pulse-btn 1.5s infinite alternate;
-  filter: brightness(1.15);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(248,215,123,0.12);
 }
 
-.dropdown-btn.active-dropdown:focus {
-  transform: scale(1.07) translateY(-3px);
-}
-
-.dropdown-btn:hover {
-  transform: translateY(-3px);
-}
-
+/* dropdown content com largura EXATA do botão */
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 110%;
+  top: calc(100% + 8px);
   left: 0;
-  background: #111;
-  min-width: 120px;
-  border: 1px solid #f8d77b;
-  border-radius: 8px;
-  z-index: 200;
+  background: linear-gradient(180deg, #111111, #0f0f0f);
+  width: 100%;              /* 🔥 ajustado — sem min-width fixa */
+  border-radius: 10px;
+  padding: 6px;
+  border: 1px solid rgba(248,215,123,0.12);
+  z-index: 250;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.dropdown-content.show,
+.dropdown-btn.active-dropdown + .dropdown-content {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
   flex-direction: column;
-  box-shadow: 0 4px 10px rgba(248, 215, 123, 0.3);
 }
 
+/* botões internos */
 .dropdown-content button {
-  background: #1a1a1a;
-  color: #f8d77b;
-  padding: 0.6rem 1rem;
+  background: transparent;
+  color: #ffd874;
+  padding: 10px 12px;
   border: none;
+  text-align: center;      /* 🔥 centralizado */
+  width: 100%;
   cursor: pointer;
-  text-align: left;
-  transition: 0.3s;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 
-.dropdown-content button:hover {
-  background: #ffd651;
+.dropdown-content button:hover,
+.dropdown-content button:focus {
+  background: rgba(248,215,123,0.14);
   color: #0b0b0b;
+  outline: none;
+}
+
+/* separador do botão "Todas" */
+.dropdown-content button[data-mesa="todas"] {
+  border-bottom: 1px solid rgba(248,215,123,0.06);
+  margin-bottom: 6px;
+  padding-bottom: 8px;
 }
 
 /* ================= SIDEBAR ================= */
@@ -325,6 +357,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding-top: 12rem; /* espaço abaixo do header */
+  padding-bottom: 2rem; /* Adicionando espaço abaixo dos cards */
 }
 
 /* ================= CARD DE PEDIDO ================= */

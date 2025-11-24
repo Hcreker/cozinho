@@ -41,16 +41,11 @@ const pedidos = [
     { nome: "PIZZA CALABRESA GRANDE", adicionais: ["+ FINA", "+ EXTRA QUEIJO"] },
     { nome: "BATATA FRITA", adicionais: ["+ CHEDDAR"] }
   ]},
-  { mesa: 11, cliente: "Miguel", tempoSegundos: 0, tempoEstimado: 45, status: "Em preparo", produtos: [
-    { nome: "PIZZA MARGUERITA GRANDE", adicionais: ["+ DOBRO DO RECHEIO"] },
-    { nome: "REFRIGERANTE 2L", adicionais: [], bebida: true },
-    { nome: "BROWNIE", adicionais: ["+ CHOCOLATE"] }
-  ]},
-  { mesa: 12, cliente: "Bianca", tempoSegundos: 0, tempoEstimado: 15, status: "Aguardando", produtos: [
-    { nome: "HAMBÚRGUER SIMPLES", adicionais: ["+ QUEIJO"] },
-    { nome: "COCA-COLA LATA", adicionais: [], bebida: true }
-  ]}
 ];
+
+// ====================== ESTADO DE FILTROS GLOBAIS ======================
+let mesaFiltro = null; // null = todos
+let prioridadeFiltro = null; // null = todos (não usado para filtrar pedidos pois pedidos não têm campo prioridade por enquanto)
 
 // ====================== FUNÇÕES ======================
 function togglePronto(indexPedido, indexProduto) {
@@ -58,26 +53,37 @@ function togglePronto(indexPedido, indexProduto) {
   if (pedido.status === "Aguardando") return;
   pedido.produtos[indexProduto].pronto = !pedido.produtos[indexProduto].pronto;
   const card = document.querySelector(`.card-pedido[data-index='${indexPedido}']`);
+  if (!card) return;
   const item = card.querySelectorAll(".item-pedido")[indexProduto];
-  item.classList.toggle("pronto");
+  if (item) item.classList.toggle("pronto");
 }
 
 function atualizarContagemBotoes() {
   const contagens = { "Aguardando": 0, "Em preparo": 0, "Finalizado": 0 };
   pedidos.forEach(p => contagens[p.status]++);
-  document.querySelector(".status-btn.aguardando").textContent = `Aguardando (${contagens["Aguardando"]})`;
-  document.querySelector(".status-btn.preparo").textContent = `Em preparo (${contagens["Em preparo"]})`;
-  document.querySelector(".status-btn.finalizados").textContent = `Finalizados (${contagens["Finalizado"]})`;
-  document.querySelector(".status-btn.todos").textContent = `Todos (${pedidos.length})`;
+  const aguardandoBtn = document.querySelector(".status-btn.aguardando");
+  const preparoBtn = document.querySelector(".status-btn.preparo");
+  const finalizadosBtn = document.querySelector(".status-btn.finalizados");
+  const todosBtn = document.querySelector(".status-btn.todos");
+  if (aguardandoBtn) aguardandoBtn.textContent = `Aguardando (${contagens["Aguardando"]})`;
+  if (preparoBtn) preparoBtn.textContent = `Em preparo (${contagens["Em preparo"]})`;
+  if (finalizadosBtn) finalizadosBtn.textContent = `Finalizados (${contagens["Finalizado"]})`;
+  if (todosBtn) todosBtn.textContent = `Todos (${pedidos.length})`;
 }
 
 // ====================== RENDER PEDIDOS ======================
 function renderPedidos() {
   const container = document.getElementById("pedidos-container");
+  if (!container) return;
   container.innerHTML = "";
 
   const statusFiltro = document.querySelector(".status-btn.active")?.dataset.status || "Todos";
-  let pedidosFiltrados = pedidos.filter(p => statusFiltro === "Todos" ? true : p.status === statusFiltro);
+
+  let pedidosFiltrados = pedidos.filter(p => {
+    const statusOk = statusFiltro === "Todos" ? true : p.status === statusFiltro;
+    const mesaOk = mesaFiltro === null ? true : p.mesa === mesaFiltro;
+    return statusOk && mesaOk;
+  });
 
   if (statusFiltro === "Todos") {
     const ordem = { "Aguardando": 0, "Em preparo": 1, "Finalizado": 2 };
@@ -92,6 +98,7 @@ function renderPedidos() {
 
   pedidosFiltrados.forEach(pedido => {
     const indexOriginal = pedidos.indexOf(pedido);
+
     const card = document.createElement("div");
     card.classList.add("card-pedido",
       pedido.status === "Aguardando" ? "aguardando" :
@@ -101,7 +108,6 @@ function renderPedidos() {
 
     const tempoMin = Math.floor(pedido.tempoSegundos / 60);
     const tempoSec = pedido.tempoSegundos % 60;
-    const tempoStr = tempoMin.toString().padStart(2,"0") + ":" + tempoSec.toString().padStart(2,"0");
 
     const produtosHTML = pedido.produtos.map(prod => {
       const classe = `item-pedido ${prod.pronto ? "pronto" : ""} ${prod.bebida ? "bebida" : ""}`;
@@ -117,11 +123,12 @@ function renderPedidos() {
     card.innerHTML = `
       <div class="card-header">
         <span>Mesa ${pedido.mesa} - ${pedido.cliente}</span>
-        <span class="tempo">${tempoStr}</span>
+        <span class="tempo">${tempoMin.toString().padStart(2,"0")}:${tempoSec.toString().padStart(2,"0")}</span>
       </div>
       <div class="card-content">${produtosHTML}</div>
       ${gerarBotoes(pedido, indexOriginal)}
     `;
+
     container.appendChild(card);
   });
 
@@ -159,14 +166,18 @@ function entregar(i){ pedidos.splice(i,1); renderPedidos(); }
 setInterval(()=>{
   pedidos.forEach((p,index)=>{
     if(p.status!=="Finalizado") p.tempoSegundos++;
+
     const card=document.querySelector(`.card-pedido[data-index='${index}']`);
     if(card){
       const tempoSpan=card.querySelector(".tempo");
       const minutos=Math.floor(p.tempoSegundos/60).toString().padStart(2,"0");
       const segundos=(p.tempoSegundos%60).toString().padStart(2,"0");
       tempoSpan.textContent=`${minutos}:${segundos}`;
-      if(p.tempoSegundos>(p.tempoEstimado*60)+300 && p.status!=="Finalizado") card.classList.add("urgente");
-      else card.classList.remove("urgente");
+
+      if(p.tempoSegundos>(p.tempoEstimado*60)+300 && p.status!=="Finalizado")
+        card.classList.add("urgente");
+      else
+        card.classList.remove("urgente");
     }
   });
 },1000);
@@ -181,20 +192,23 @@ function toggleMenu(open){
   if(open){
     sidebar.classList.add("active");
     overlay.classList.add("active");
-    menuToggle.classList.add("hidden");
+    menuToggle.classList.add("active");
   }else{
     sidebar.classList.remove("active");
     overlay.classList.remove("active");
-    menuToggle.classList.remove("hidden");
+    menuToggle.classList.remove("active");
   }
 }
 
-menuToggle.addEventListener("click",()=>toggleMenu(true));
+menuToggle.addEventListener("click",()=> {
+  const menuAberto = sidebar.classList.contains("active");
+  toggleMenu(!menuAberto);
+});
 menuClose.addEventListener("click",()=>toggleMenu(false));
 overlay.addEventListener("click",()=>toggleMenu(false));
 
 // ====================== FILTROS DE STATUS ======================
-document.querySelectorAll(".status-btn").forEach(btn=>{
+document.querySelectorAll(".status-btn").forEach(btn=> {
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
@@ -202,29 +216,133 @@ document.querySelectorAll(".status-btn").forEach(btn=>{
   });
 });
 
-// ====================== DROPDOWNS MESAS E PRIORIDADE ======================
+// ====================== DROPDOWNS (MESAS E PRIORIDADE) ======================
 document.addEventListener("DOMContentLoaded",()=>{
-  const dropdowns=document.querySelectorAll(".dropdown-wrapper");
+
+  // ---------- MESAS (1 a 10 fixas) ----------
+  const dropdownMesasContent = document.getElementById("dropdown-mesas-content");
+  const dropdownMesasBtn = document.getElementById("dropdown-mesas");
+
+  if(dropdownMesasContent && dropdownMesasBtn){
+
+    dropdownMesasContent.innerHTML = "";
+
+    // botão "Todas"
+    const btnTodas = document.createElement("button");
+    btnTodas.textContent = "Todas";
+    btnTodas.dataset.mesa = "todas";
+    dropdownMesasContent.appendChild(btnTodas);
+
+    // mesas 1 a 10
+    for(let m=1; m<=10; m++){
+      const b = document.createElement("button");
+      b.textContent = `Mesa ${m}`;
+      b.dataset.mesa = m;
+      dropdownMesasContent.appendChild(b);
+    }
+
+    // quando clica em uma mesa
+    dropdownMesasContent.addEventListener("click",(e)=> {
+      e.stopPropagation();
+      const bt = e.target.closest("button");
+      if(!bt) return;
+
+      const val = bt.dataset.mesa;
+
+      if(val === "todas"){
+        mesaFiltro = null;
+        dropdownMesasBtn.textContent = "Mesas";
+      } else {
+        mesaFiltro = Number(val);
+        dropdownMesasBtn.textContent = `Mesa ${mesaFiltro}`;
+      }
+
+      // fecha dropdown e remove estado ativo
+      dropdownMesasContent.style.display = "none";
+      dropdownMesasBtn.classList.remove("active-dropdown");
+
+      renderPedidos();
+    });
+  }
+
+  // ---------- PRIORIDADE (Todos, Urgente, Normal) ----------
+  const dropdownPrioridadeContent = document.getElementById("dropdown-prioridade-content");
+  const dropdownPrioridadeBtn = document.getElementById("dropdown-prioridade");
+
+  if(dropdownPrioridadeContent && dropdownPrioridadeBtn){
+    dropdownPrioridadeContent.innerHTML = "";
+
+    // "Todos" opcional
+    const pTodas = document.createElement("button");
+    pTodas.textContent = "Todos";
+    pTodas.dataset.prioridade = "todas";
+    dropdownPrioridadeContent.appendChild(pTodas);
+
+    // opções padrão
+    const pUrgente = document.createElement("button");
+    pUrgente.textContent = "Urgente";
+    pUrgente.dataset.prioridade = "Urgente";
+    dropdownPrioridadeContent.appendChild(pUrgente);
+
+    const pNormal = document.createElement("button");
+    pNormal.textContent = "Normal";
+    pNormal.dataset.prioridade = "Normal";
+    dropdownPrioridadeContent.appendChild(pNormal);
+
+    // clique nas prioridades
+    dropdownPrioridadeContent.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      const bt = e.target.closest("button");
+      if(!bt) return;
+
+      const val = bt.dataset.prioridade;
+
+      if(val === "todas"){
+        prioridadeFiltro = null;
+        dropdownPrioridadeBtn.textContent = "Prioridade";
+      } else {
+        prioridadeFiltro = val;
+        dropdownPrioridadeBtn.textContent = val;
+      }
+
+      // fecha dropdown e remove estado ativo
+      dropdownPrioridadeContent.style.display = "none";
+      dropdownPrioridadeBtn.classList.remove("active-dropdown");
+
+      renderPedidos();
+    });
+  }
+
+  // ====================== DROPDOWN BONITO (comportamento comum para ambos) ======================
+  const dropdowns = document.querySelectorAll(".dropdown-wrapper");
+
   dropdowns.forEach(wrapper=>{
-    const btn=wrapper.querySelector(".dropdown-btn");
-    const content=wrapper.querySelector(".dropdown-content");
+    const btn = wrapper.querySelector(".dropdown-btn");
+    const content = wrapper.querySelector(".dropdown-content");
+    if(!btn || !content) return;
 
     btn.addEventListener("click",(e)=>{
       e.stopPropagation();
+
+      // fecha outros dropdowns
       document.querySelectorAll(".dropdown-content").forEach(c=>{
         if(c!==content) c.style.display="none";
       });
-      const openNow=content.style.display==="flex";
+
+      const isOpen = content.style.display === "flex";
+
       document.querySelectorAll(".dropdown-btn").forEach(b=>b.classList.remove("active-dropdown"));
-      if(!openNow){
-        content.style.display="flex";
+
+      if(!isOpen){
+        content.style.display = "flex";
         btn.classList.add("active-dropdown");
-      }else{
-        content.style.display="none";
+      } else {
+        content.style.display = "none";
       }
     });
   });
 
+  // fechar dropdown quando clica fora
   document.addEventListener("click",()=>{
     document.querySelectorAll(".dropdown-content").forEach(c=>c.style.display="none");
     document.querySelectorAll(".dropdown-btn").forEach(b=>b.classList.remove("active-dropdown"));
@@ -233,28 +351,49 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 // ====================== SCROLL INTELIGENTE ======================
 function atualizarScrollCards(){
-  const cards=document.querySelectorAll('.card-content');
-  cards.forEach(card=>{
-    card.style.overflowY='hidden';
-    const itens=Array.from(card.querySelectorAll('.item-pedido'));
-    if(itens.length===0) return;
-    const visibleTop=card.scrollTop;
-    const visibleBottom=visibleTop+card.clientHeight;
-    let precisaScroll=false;
-    for(let it of itens){
-      const top=it.offsetTop;
-      const bottom=top+it.offsetHeight;
-      if(top<visibleTop-1 || bottom>visibleBottom+1){precisaScroll=true;break;}
+  const cards = document.querySelectorAll('.card-content');
+
+  cards.forEach(card => {
+    card.style.overflowY = 'hidden';
+    const itens = Array.from(card.querySelectorAll('.item-pedido'));
+
+    if(itens.length === 0) return;
+
+    const visibleTop = card.scrollTop;
+    const visibleBottom = visibleTop + card.clientHeight;
+    let precisaScroll = false;
+
+    for (let it of itens) {
+      const top = it.offsetTop;
+      const bottom = top + it.offsetHeight;
+
+      if (top < visibleTop - 1 || bottom > visibleBottom + 1) {
+        precisaScroll = true;
+        break;
+      }
     }
-    if(!precisaScroll && card.scrollHeight>card.clientHeight+1) precisaScroll=true;
-    card.style.overflowY=precisaScroll?'auto':'hidden';
+
+    if (!precisaScroll && card.scrollHeight > card.clientHeight + 1)
+      precisaScroll = true;
+
+    card.style.overflowY = precisaScroll ? 'auto' : 'hidden';
   });
 }
 
-window.addEventListener('resize',atualizarScrollCards);
-const scrollObserver=new MutationObserver(()=>{requestAnimationFrame(atualizarScrollCards)});
-scrollObserver.observe(document.getElementById('pedidos-container'),{childList:true,subtree:true});
-document.addEventListener('DOMContentLoaded',()=>{setTimeout(atualizarScrollCards,50);});
+window.addEventListener('resize', atualizarScrollCards);
+
+const scrollObserver = new MutationObserver(() => {
+  requestAnimationFrame(atualizarScrollCards);
+});
+
+scrollObserver.observe(document.getElementById('pedidos-container'), {
+  childList: true,
+  subtree: true
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(atualizarScrollCards, 50);
+});
 
 // ====================== RENDER INICIAL ======================
 renderPedidos();
