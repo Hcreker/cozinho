@@ -33,24 +33,23 @@ body {
   gap: 0.8rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   border-bottom: 1px solid rgba(248, 215, 123, 0.397);
-
 }
 
 .header {
   display: flex;
-  align-items: center; /* centraliza verticalmente todos os elementos */
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
   position: relative;
-  padding-left: 22.4rem; /* espaço da borda esquerda */
+  padding-left: 22.4rem;
 }
 
-/* ================= BOTÃO MENU FIXO (HAMBÚRGUER DOURADO) ================= */
+/* ================= BOTÃO MENU FIXO ================= */
 .menu-toggle {
   position: fixed;
-  top: 3.8rem; /* alinhado com o header */
+  top: 3.8rem;
   left: 1.5rem;
-  z-index: 1100; /* acima do header e overlay */
+  z-index: 1100;
   width: 60px;
   height: 40px;
   background: transparent;
@@ -65,7 +64,6 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* as três linhas douradas */
 .menu-toggle span {
   display: block;
   width: 35px;
@@ -76,7 +74,6 @@ body {
   will-change: transform, opacity;
 }
 
-/* hover e foco */
 .menu-toggle:hover,
 .menu-toggle:focus {
   transform: scale(1.08);
@@ -89,7 +86,6 @@ body {
   box-shadow: 0 0 10px rgba(255,214,81,0.14);
 }
 
-/* estado ativo (quando o menu está aberto) -> forma um X */
 .menu-toggle.active span:nth-child(1) {
   transform: translateY(9px) rotate(45deg);
 }
@@ -130,7 +126,6 @@ body {
   transition: opacity 0.4s ease;
 }
 
-/* cores padrões */
 .status-btn.aguardando { border-color: #f8d77b; background: linear-gradient(145deg, #b02626, #d9534f); }
 .status-btn.aguardando::after { background: linear-gradient(145deg, #e75b5b, #cc1212); }
 
@@ -164,9 +159,7 @@ body {
   100% { box-shadow: 0 0 10px rgba(248, 215, 123, 0.3); }
 }
 
-/* ================= DROPDOWN WRAPPER (MELHORADO — SUBSTITUI SOMENTE ESTE BLOCO) ================= */
-/* Mantive a mesma estrutura de classes do seu JS: .dropdown-wrapper, .dropdown-btn, .dropdown-content */
-/* Versão minimalista, leve e compatível com seu HTML/JS existente */
+/* ================= DROPDOWN ================= */
 .dropdown-wrapper {
   position: relative;
   display: inline-block;
@@ -182,13 +175,9 @@ body {
   font-weight: 600;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   box-shadow: 0 0 8px rgba(248,215,123,0.06);
-  width: 100%;              /* 🔥 faz o dropdown ter a mesma largura */
-  text-align: center;       /* 🔥 centraliza o texto do botão */
-    width: 120px;  /* Largura fixa */
-
+  width: 120px;
+  text-align: center;
 }
-
-
 
 .dropdown-btn:hover {
   transform: translateY(-2px);
@@ -200,14 +189,13 @@ body {
   box-shadow: 0 10px 30px rgba(248,215,123,0.12);
 }
 
-/* dropdown content com largura EXATA do botão */
 .dropdown-content {
   display: none;
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   background: linear-gradient(180deg, #111111, #0f0f0f);
-  width: 100%;              /* 🔥 ajustado — sem min-width fixa */
+  width: 100%;
   border-radius: 10px;
   padding: 6px;
   border: 1px solid rgba(248,215,123,0.12);
@@ -219,6 +207,7 @@ body {
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
+  flex-direction: column;
 }
 
 .dropdown-content.show,
@@ -227,16 +216,13 @@ body {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  flex-direction: column;
 }
 
-/* botões internos */
 .dropdown-content button {
   background: transparent;
   color: #ffd874;
   padding: 10px 12px;
   border: none;
-  text-align: center;      /* 🔥 centralizado */
   width: 100%;
   cursor: pointer;
   border-radius: 8px;
@@ -251,7 +237,6 @@ body {
   outline: none;
 }
 
-/* separador do botão "Todas" */
 .dropdown-content button[data-mesa="todas"] {
   border-bottom: 1px solid rgba(248,215,123,0.06);
   margin-bottom: 6px;
@@ -314,7 +299,6 @@ body {
   color: #0b0b0b;
 }
 
-/* Botão X interno */
 #menu-close {
   align-self: flex-end;
   background: transparent;
@@ -356,8 +340,8 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding-top: 12rem; /* espaço abaixo do header */
-  padding-bottom: 2rem; /* Adicionando espaço abaixo dos cards */
+  padding-top: 12rem;
+  padding-bottom: 2rem;
 }
 
 /* ================= CARD DE PEDIDO ================= */
@@ -376,10 +360,6 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
   box-shadow: 0 4px 10px rgba(248, 215, 123, 0.1);
   overflow-y: auto;
-}
-
-/* Scroll dourado */
-.card-pedido {
   scrollbar-width: thin;
   scrollbar-color: #ffd651 #111;
 }
@@ -428,10 +408,16 @@ body {
   background: linear-gradient(145deg, #1c3a1c, #245124);
 }
 
-/* Card item pronto */
-.item-pedido.pronto {
-  border: 2px solid #56bd56;
-  box-shadow: 0 0 10px #56bd56;
+/* ================= URGENTE ================= */
+.card-pedido.urgente {
+  box-shadow: 0 0 0 3px #ff4c4c, 0 0 20px rgba(255,76,76,0.6);
+  animation: pulse-urgente 1s infinite alternate;
+}
+
+@keyframes pulse-urgente {
+  0% { box-shadow: 0 0 0 3px #ff4c4c, 0 0 20px rgba(255,76,76,0.6); }
+  50% { box-shadow: 0 0 0 4.5px #ff4c4c, 0 0 25px rgba(255,76,76,0.8); }
+  100% { box-shadow: 0 0 0 3px #ff4c4c, 0 0 20px rgba(255,76,76,0.6); }
 }
 
 /* Header do card */

@@ -45,7 +45,8 @@ const pedidos = [
 
 // ====================== ESTADO DE FILTROS GLOBAIS ======================
 let mesaFiltro = null; // null = todos
-let prioridadeFiltro = null; // null = todos (não usado para filtrar pedidos pois pedidos não têm campo prioridade por enquanto)
+let prioridadeFiltro = null; // null = todos
+pedidos.forEach(p => p.prioridade = "Normal"); // prioridade inicial
 
 // ====================== FUNÇÕES ======================
 function togglePronto(indexPedido, indexProduto) {
@@ -82,7 +83,8 @@ function renderPedidos() {
   let pedidosFiltrados = pedidos.filter(p => {
     const statusOk = statusFiltro === "Todos" ? true : p.status === statusFiltro;
     const mesaOk = mesaFiltro === null ? true : p.mesa === mesaFiltro;
-    return statusOk && mesaOk;
+    const prioridadeOk = prioridadeFiltro === null ? true : p.prioridade === prioridadeFiltro;
+    return statusOk && mesaOk && prioridadeOk;
   });
 
   if (statusFiltro === "Todos") {
@@ -104,6 +106,7 @@ function renderPedidos() {
       pedido.status === "Aguardando" ? "aguardando" :
       pedido.status === "Em preparo" ? "preparo" : "finalizados"
     );
+    if(pedido.prioridade === "Urgente") card.classList.add("urgente");
     card.dataset.index = indexOriginal;
 
     const tempoMin = Math.floor(pedido.tempoSegundos / 60);
@@ -156,16 +159,34 @@ function gerarBotoes(pedido, i) {
   }
 }
 
-function preparar(i){ pedidos[i].status="Em preparo"; renderPedidos(); }
+function preparar(i){ 
+  pedidos[i].status="Em preparo"; 
+  pedidos[i].prioridade="Normal"; // resetar prioridade ao mudar de etapa
+  renderPedidos(); 
+}
 function cancelar(i){ pedidos.splice(i,1); renderPedidos(); }
-function voltarEtapa(i){ pedidos[i].status=pedidos[i].status==="Finalizado"?"Em preparo":"Aguardando"; renderPedidos(); }
-function finalizar(i){ pedidos[i].status="Finalizado"; renderPedidos(); }
+function voltarEtapa(i){ 
+  pedidos[i].status = pedidos[i].status==="Finalizado" ? "Em preparo" : "Aguardando"; 
+  pedidos[i].prioridade="Normal"; // resetar prioridade ao mudar de etapa
+  renderPedidos(); 
+}
+function finalizar(i){ 
+  pedidos[i].status="Finalizado"; 
+  pedidos[i].prioridade="Normal"; // resetar prioridade
+  renderPedidos(); 
+}
 function entregar(i){ pedidos.splice(i,1); renderPedidos(); }
 
 // ====================== TIMER ======================
-setInterval(()=>{
-  pedidos.forEach((p,index)=>{
-    if(p.status!=="Finalizado") p.tempoSegundos++;
+setInterval(() => {
+  // Atualiza tempo de TODOS os pedidos
+  pedidos.forEach((p,index) => {
+    if(p.status !== "Finalizado") p.tempoSegundos++;
+
+    // ====================== PRIORIDADE AUTOMÁTICA ======================
+    if(p.status === "Aguardando") {
+      p.prioridade = p.tempoSegundos > 60 ? "Urgente" : "Normal";
+    }
 
     const card=document.querySelector(`.card-pedido[data-index='${index}']`);
     if(card){
@@ -180,6 +201,9 @@ setInterval(()=>{
         card.classList.remove("urgente");
     }
   });
+
+  // Renderiza apenas uma vez por segundo, mas mantém a prioridade correta
+  renderPedidos();
 },1000);
 
 // ====================== MENU LATERAL ======================
@@ -209,7 +233,7 @@ overlay.addEventListener("click",()=>toggleMenu(false));
 
 // ====================== FILTROS DE STATUS ======================
 document.querySelectorAll(".status-btn").forEach(btn=> {
-  btn.addEventListener("click",()=>{
+  btn.addEventListener("click",()=> {
     document.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     renderPedidos();
@@ -224,16 +248,13 @@ document.addEventListener("DOMContentLoaded",()=>{
   const dropdownMesasBtn = document.getElementById("dropdown-mesas");
 
   if(dropdownMesasContent && dropdownMesasBtn){
-
     dropdownMesasContent.innerHTML = "";
 
-    // botão "Todas"
     const btnTodas = document.createElement("button");
     btnTodas.textContent = "Todas";
     btnTodas.dataset.mesa = "todas";
     dropdownMesasContent.appendChild(btnTodas);
 
-    // mesas 1 a 10
     for(let m=1; m<=10; m++){
       const b = document.createElement("button");
       b.textContent = `Mesa ${m}`;
@@ -241,7 +262,6 @@ document.addEventListener("DOMContentLoaded",()=>{
       dropdownMesasContent.appendChild(b);
     }
 
-    // quando clica em uma mesa
     dropdownMesasContent.addEventListener("click",(e)=> {
       e.stopPropagation();
       const bt = e.target.closest("button");
@@ -257,7 +277,6 @@ document.addEventListener("DOMContentLoaded",()=>{
         dropdownMesasBtn.textContent = `Mesa ${mesaFiltro}`;
       }
 
-      // fecha dropdown e remove estado ativo
       dropdownMesasContent.style.display = "none";
       dropdownMesasBtn.classList.remove("active-dropdown");
 
@@ -272,13 +291,11 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(dropdownPrioridadeContent && dropdownPrioridadeBtn){
     dropdownPrioridadeContent.innerHTML = "";
 
-    // "Todos" opcional
     const pTodas = document.createElement("button");
     pTodas.textContent = "Todos";
     pTodas.dataset.prioridade = "todas";
     dropdownPrioridadeContent.appendChild(pTodas);
 
-    // opções padrão
     const pUrgente = document.createElement("button");
     pUrgente.textContent = "Urgente";
     pUrgente.dataset.prioridade = "Urgente";
@@ -289,7 +306,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     pNormal.dataset.prioridade = "Normal";
     dropdownPrioridadeContent.appendChild(pNormal);
 
-    // clique nas prioridades
     dropdownPrioridadeContent.addEventListener("click",(e)=>{
       e.stopPropagation();
       const bt = e.target.closest("button");
@@ -305,7 +321,6 @@ document.addEventListener("DOMContentLoaded",()=>{
         dropdownPrioridadeBtn.textContent = val;
       }
 
-      // fecha dropdown e remove estado ativo
       dropdownPrioridadeContent.style.display = "none";
       dropdownPrioridadeBtn.classList.remove("active-dropdown");
 
@@ -313,7 +328,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
   }
 
-  // ====================== DROPDOWN BONITO (comportamento comum para ambos) ======================
   const dropdowns = document.querySelectorAll(".dropdown-wrapper");
 
   dropdowns.forEach(wrapper=>{
@@ -324,7 +338,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     btn.addEventListener("click",(e)=>{
       e.stopPropagation();
 
-      // fecha outros dropdowns
       document.querySelectorAll(".dropdown-content").forEach(c=>{
         if(c!==content) c.style.display="none";
       });
@@ -342,7 +355,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
   });
 
-  // fechar dropdown quando clica fora
   document.addEventListener("click",()=>{
     document.querySelectorAll(".dropdown-content").forEach(c=>c.style.display="none");
     document.querySelectorAll(".dropdown-btn").forEach(b=>b.classList.remove("active-dropdown"));
