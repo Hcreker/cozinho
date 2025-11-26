@@ -17,12 +17,12 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
-    <button id="menu-close">×</button>
+    <button id="menu-close"></button>
     <h2 class="logo">Chef Master</h2>
     <nav>
-      <button class="menu-btn">Dashboard</button>
-      <button class="menu-btn">Pedidos</button>
-      <button class="menu-btn">Configurações</button>
+      <button class="menu-btn pedidos">Pedidos</button>
+      <button class="menu-btn config">Configurações</button>
+      <button class="menu-btn sair">Sair</button>
     </nav>
   </div>
 
@@ -43,7 +43,7 @@
       <button class="status-btn finalizados" data-status="Finalizado">Finalizados</button>
       <button class="status-btn todos" data-status="Todos">Todos</button>
       <div class="dropdown-wrapper">
-        <button class="dropdown-btn" id="dropdown-prioridade">Prioridade</button>
+        <button class="dropdown-btn" id="dropdown-prioridade">Prioridades</button>
         <div class="dropdown-content" id="dropdown-prioridade-content">
           <button>Urgente</button>
           <button>Normal</button>
@@ -56,6 +56,17 @@
   <div class="content">
     <div class="pedidos-container" id="pedidos-container">
       <div class="sem-pedidos">Nenhum pedido no momento</div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação -->
+  <div id="modal-confirmacao" class="modal">
+    <div class="modal-content">
+      <p class="modal-text">Você tem certeza que deseja cancelar este pedido?</p>
+      <div class="modal-actions">
+        <button id="confirmar-cancelar" class="btn confirmar">Sim, cancelar</button>
+        <button id="fechar-modal" class="btn cancelar">Não, voltar</button>
+      </div>
     </div>
   </div>
 

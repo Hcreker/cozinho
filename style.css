@@ -49,7 +49,7 @@ body {
   position: fixed;
   top: 3.8rem;
   left: 1.5rem;
-  z-index: 1100;
+  z-index: 10000;
   width: 60px;
   height: 40px;
   background: transparent;
@@ -87,7 +87,8 @@ body {
 }
 
 .menu-toggle.active span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
+  transform: translateY(15px) rotate(45deg);
+  width: 40px;
 }
 .menu-toggle.active span:nth-child(2) {
   opacity: 0;
@@ -95,6 +96,7 @@ body {
 }
 .menu-toggle.active span:nth-child(3) {
   transform: translateY(-9px) rotate(-45deg);
+  width: 40px;
 }
 
 /* ================= STATUS BUTTONS ================= */
@@ -129,13 +131,13 @@ body {
 .status-btn.aguardando { border-color: #f8d77b; background: linear-gradient(145deg, #b02626, #d9534f); }
 .status-btn.aguardando::after { background: linear-gradient(145deg, #e75b5b, #cc1212); }
 
-.status-btn.preparo { border-color: #f8d77b; background: linear-gradient(145deg, #eea929, #f0bd4e); }
+.status-btn.preparo { border-color: #f8d77b; background: linear-gradient(145deg, #eca623, #f0bd4e); }
 .status-btn.preparo::after { background: linear-gradient(145deg, #eca650, #f1b23b); }
 
 .status-btn.finalizados { border-color: #f8d77b; background: linear-gradient(145deg, #3b883b, #4fb14f); }
 .status-btn.finalizados::after { background: linear-gradient(145deg, #4fca4f, #258f22); }
 
-.status-btn.todos { border-color: #f8d77b; background: linear-gradient(145deg, #ffd54a, #e9c86f); }
+.status-btn.todos { border-color: #f8d77b; background: linear-gradient(145deg, #ce9806, #fcdc76); }
 .status-btn.todos::after { background: linear-gradient(145deg, #ffe979, #9e7c1f); }
 
 .status-btn.active::after {
@@ -250,18 +252,22 @@ body {
   left: -300px;
   width: 300px;
   height: 100vh;
-  background: #111;
+  background: linear-gradient(180deg, #1f1f1f, #16120d);
   color: #f8d77b;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem 1rem;
+  padding: 110px 1.5rem 2.5rem;
   transition: left 0.3s ease;
-  z-index: 105;
+  z-index: 9999;
+  border-right: none; /* Remover borda padrão */
+  backdrop-filter: blur(3px);
 }
 
 .sidebar.active {
   left: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08); /* Borda visível quando ativo */
+  box-shadow: 4px 0 20px #f8d77b; /* Efeito brilhante visível quando ativo */
 }
 
 .sidebar h2.logo {
@@ -273,6 +279,7 @@ body {
   text-shadow: 0 0 5px #ffd12c;
 }
 
+/* ================= MENU COM 3 BOTÕES ================= */
 .sidebar nav {
   display: flex;
   flex-direction: column;
@@ -285,18 +292,33 @@ body {
   background: #1a1a1a;
   border: 1px solid #f8d77b;
   color: #f8d77b;
-  padding: 0.8rem;
-  border-radius: 10px;
+  padding: 1.2rem 1.5rem; /* Aumentar o padding vertical para botões maiores */
+  border-radius: 12px;
   cursor: pointer;
-  text-align: left;
-  font-weight: 500;
-  transition: 0.3s;
+  text-align: center;
+  font-weight: 600;
+  transition: 0.3s, transform 0.2s, box-shadow 0.3s;
+  font-size: 1.05rem; /* Tamanho de fonte ajustado */
+  box-shadow: 0 4px 12px rgba(248, 215, 123, 0.15); /* Sombra mais forte */
 }
 
-.sidebar .menu-btn.active,
-.sidebar .menu-btn:hover {
-  background: #f8d77b;
-  color: #0b0b0b;
+.sidebar .menu-btn:hover,
+.sidebar .menu-btn.active {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(248,215,123,0.3);
+}
+
+/* Botão Sair vermelho */
+.sidebar .menu-btn.sair {
+  background: linear-gradient(145deg, #b02626, #d9534f);
+  border-color: #ff4c4c;
+  color: #fff;
+}
+
+/* Botão Pedidos e Configurações */
+.sidebar .menu-btn.pedidos,
+.sidebar .menu-btn.config {
+  background: linear-gradient(145deg, #1a1a1a, #222);
 }
 
 #menu-close {
@@ -315,18 +337,21 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(1px);
+
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s;
-  z-index: 100;
   pointer-events: none;
+
+  transition: opacity 0.25s ease;
+
+  z-index: 9998; /* deixa TUDO por baixo apagado */
 }
 
 #overlay.active {
   opacity: 1;
-  visibility: visible;
   pointer-events: all;
 }
 
@@ -360,28 +385,25 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
   box-shadow: 0 4px 10px rgba(248, 215, 123, 0.1);
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #ffd651 #111;
+  scrollbar-width: thin;             /* Firefox */
+  scrollbar-color: #ffd651 #111;    /* Firefox thumb e track */
 }
 
+/* Scrollbar */
 .card-pedido::-webkit-scrollbar {
   width: 6px;
 }
-
 .card-pedido::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #ffd651, #ffdc68);
   border-radius: 5px;
 }
-
 .card-pedido::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #ffe88a, #ffd651);
 }
-
 .card-pedido::-webkit-scrollbar-track {
   background: #111;
   border-radius: 5px;
 }
-
 .card-pedido.aguardando { border-color: #d9534f; }
 .card-pedido.preparo { border-color: #f0ad4e; }
 .card-pedido.finalizados { border-color: #5cb85c; }
@@ -568,6 +590,97 @@ body {
   animation: pulse 2s infinite;
 }
 
+/* ================= MODAL CUSTOMIZADO ================= */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(11, 11, 11, 0.637); /* escuro e translúcido */
+  backdrop-filter: blur(1px);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  transition: opacity 0.25s ease;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #1f1f1f, #16120d); /* gradiente do site */
+  border: 2px solid #f8d77b;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 0 20px rgba(248, 215, 123, 0.35);
+  color: #f8d77b;
+  font-weight: 600;
+  font-size: 1rem;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  text-shadow: 0 0 5px #ffd12c;
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  color: #ffd651;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.modal button {
+  flex: 1 1 40%;
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #f8d77b;
+  background: linear-gradient(145deg, #1a1a1a, #222);
+  color: #f8d77b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal button.confirm {
+  background: linear-gradient(145deg, #56bd56, #6ac26a);
+  border-color: #56bd56;
+  color: #fff;
+}
+
+.modal button.cancel {
+  background: linear-gradient(145deg, #b02626, #d9534f);
+  border-color: #ff4c4c;
+  color: #fff;
+}
+
+.modal button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow: 0 0 10px rgba(248, 215, 123, 0.4);
+}
+
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes pulse {
   0%, 100% { text-shadow: 0 0 10px #f8d77b, 0 0 20px #ffd12c; }
   50% { text-shadow: 0 0 20px #f8d77b, 0 0 30px #ffd12c; }
@@ -586,4 +699,8 @@ body {
   .card-pedido { width: 100%; flex: 1 1 100%; }
   .sidebar { width: 200px; }
   .sidebar.active ~ .content { padding-left: 220px; }
+   .sidebar .menu-btn {
+    padding: 1.2rem 1.8rem; /* Aumentar o padding ainda mais em telas menores para maior legibilidade */
+  }
 }
+
