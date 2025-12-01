@@ -41,7 +41,8 @@ body {
   gap: 1rem;
   flex-wrap: wrap;
   position: relative;
-  padding-left: 22.4rem;
+  /* Espaço para a sidebar */
+  padding-left: 22.4rem; 
 }
 
 /* ================= BOTÃO MENU FIXO ================= */
@@ -60,7 +61,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 6px 0;
-  transition: transform 0.25s cubic-bezier(.2,.9,.3,1), filter 0.25s;
+  transition: transform 0.25s cubic-bezier(.2, .9, .3, 1), filter 0.25s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -70,30 +71,32 @@ body {
   height: 4.5px;
   background: linear-gradient(90deg, #ffd651, #f8d77b);
   border-radius: 6px;
-  transition: transform 0.28s cubic-bezier(.2,.9,.3,1), opacity 0.18s, box-shadow 0.18s;
+  transition: transform 0.28s cubic-bezier(.2, .9, .3, 1), opacity 0.18s, box-shadow 0.18s;
   will-change: transform, opacity;
 }
 
 .menu-toggle:hover,
 .menu-toggle:focus {
   transform: scale(1.08);
-  filter: drop-shadow(0 4px 8px rgba(248,215,123,0.12));
+  filter: drop-shadow(0 4px 8px rgba(248, 215, 123, 0.12));
   outline: none;
 }
 
 .menu-toggle:hover span,
 .menu-toggle:focus span {
-  box-shadow: 0 0 10px rgba(255,214,81,0.14);
+  box-shadow: 0 0 10px rgba(255, 214, 81, 0.14);
 }
 
 .menu-toggle.active span:nth-child(1) {
   transform: translateY(15px) rotate(45deg);
   width: 40px;
 }
+
 .menu-toggle.active span:nth-child(2) {
   opacity: 0;
   transform: scaleX(0.8);
 }
+
 .menu-toggle.active span:nth-child(3) {
   transform: translateY(-9px) rotate(-45deg);
   width: 40px;
@@ -107,11 +110,11 @@ body {
   background: linear-gradient(145deg, #1e1e1e, #121212);
   border: 2px solid #f8d77b;
   color: #ffffff;
-  padding: 1rem 1.6rem; 
+  padding: 1rem 1.6rem;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 1.05rem; 
+  font-size: 1.05rem;
   letter-spacing: 0.5px;
   transition: transform 0.2s, filter 0.3s, box-shadow 0.3s;
   box-shadow: 0 0 8px rgba(248, 215, 123, 0.15);
@@ -128,17 +131,41 @@ body {
   transition: opacity 0.4s ease;
 }
 
-.status-btn.aguardando { border-color: #f8d77b; background: linear-gradient(145deg, #b02626, #d9534f); }
-.status-btn.aguardando::after { background: linear-gradient(145deg, #e75b5b, #cc1212); }
+.status-btn.aguardando {
+  border-color: #f8d77b;
+  background: linear-gradient(145deg, #b02626, #d9534f);
+}
 
-.status-btn.preparo { border-color: #f8d77b; background: linear-gradient(145deg, #eca623, #f0bd4e); }
-.status-btn.preparo::after { background: linear-gradient(145deg, #eca650, #f1b23b); }
+.status-btn.aguardando::after {
+  background: linear-gradient(145deg, #e75b5b, #cc1212);
+}
 
-.status-btn.finalizados { border-color: #f8d77b; background: linear-gradient(145deg, #3b883b, #4fb14f); }
-.status-btn.finalizados::after { background: linear-gradient(145deg, #4fca4f, #258f22); }
+.status-btn.preparo {
+  border-color: #f8d77b;
+  background: linear-gradient(145deg, #eca623, #f0bd4e);
+}
 
-.status-btn.todos { border-color: #f8d77b; background: linear-gradient(145deg, #ce9806, #fcdc76); }
-.status-btn.todos::after { background: linear-gradient(145deg, #ffe979, #9e7c1f); }
+.status-btn.preparo::after {
+  background: linear-gradient(145deg, #eca650, #f1b23b);
+}
+
+.status-btn.finalizados {
+  border-color: #f8d77b;
+  background: linear-gradient(145deg, #3b883b, #4fb14f);
+}
+
+.status-btn.finalizados::after {
+  background: linear-gradient(145deg, #4fca4f, #258f22);
+}
+
+.status-btn.todos {
+  border-color: #f8d77b;
+  background: linear-gradient(145deg, #ce9806, #fcdc76);
+}
+
+.status-btn.todos::after {
+  background: linear-gradient(145deg, #ffe979, #9e7c1f);
+}
 
 .status-btn.active::after {
   opacity: 1;
@@ -156,9 +183,17 @@ body {
 }
 
 @keyframes pulse-btn {
-  0% { box-shadow: 0 0 8px rgba(248, 215, 123, 0.25); }
-  50% { box-shadow: 0 0 12px rgba(248, 215, 123, 0.35); }
-  100% { box-shadow: 0 0 10px rgba(248, 215, 123, 0.3); }
+  0% {
+    box-shadow: 0 0 8px rgba(248, 215, 123, 0.25);
+  }
+
+  50% {
+    box-shadow: 0 0 12px rgba(248, 215, 123, 0.35);
+  }
+
+  100% {
+    box-shadow: 0 0 10px rgba(248, 215, 123, 0.3);
+  }
 }
 
 /* ================= DROPDOWN ================= */
@@ -176,19 +211,19 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  box-shadow: 0 0 8px rgba(248,215,123,0.06);
+  box-shadow: 0 0 8px rgba(248, 215, 123, 0.06);
   width: 120px;
   text-align: center;
 }
 
 .dropdown-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(248,215,123,0.08);
+  box-shadow: 0 6px 16px rgba(248, 215, 123, 0.08);
 }
 
 .dropdown-btn.active-dropdown {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(248,215,123,0.12);
+  box-shadow: 0 10px 30px rgba(248, 215, 123, 0.12);
 }
 
 .dropdown-content {
@@ -200,9 +235,9 @@ body {
   width: 100%;
   border-radius: 10px;
   padding: 6px;
-  border: 1px solid rgba(248,215,123,0.12);
+  border: 1px solid rgba(248, 215, 123, 0.12);
   z-index: 250;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   transition: opacity 0.14s ease, transform 0.14s ease;
@@ -213,7 +248,7 @@ body {
 }
 
 .dropdown-content.show,
-.dropdown-btn.active-dropdown + .dropdown-content {
+.dropdown-btn.active-dropdown+.dropdown-content {
   display: flex;
   opacity: 1;
   transform: translateY(0);
@@ -234,13 +269,13 @@ body {
 
 .dropdown-content button:hover,
 .dropdown-content button:focus {
-  background: rgba(248,215,123,0.14);
+  background: rgba(248, 215, 123, 0.14);
   color: #0b0b0b;
   outline: none;
 }
 
 .dropdown-content button[data-mesa="todas"] {
-  border-bottom: 1px solid rgba(248,215,123,0.06);
+  border-bottom: 1px solid rgba(248, 215, 123, 0.06);
   margin-bottom: 6px;
   padding-bottom: 8px;
 }
@@ -260,14 +295,14 @@ body {
   padding: 110px 1.5rem 2.5rem;
   transition: left 0.3s ease;
   z-index: 9999;
-  border-right: none; 
+  border-right: none;
   backdrop-filter: blur(3px);
 }
 
 .sidebar.active {
   left: 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.08); 
-  box-shadow: 4px 0 20px #f8d77b; 
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 4px 0 20px #f8d77b;
 }
 
 .sidebar h2.logo {
@@ -292,20 +327,20 @@ body {
   background: #1a1a1a;
   border: 1px solid #f8d77b;
   color: #f8d77b;
-  padding: 1.2rem 1.5rem; 
+  padding: 1.2rem 1.5rem;
   border-radius: 12px;
   cursor: pointer;
   text-align: center;
   font-weight: 600;
   transition: 0.3s, transform 0.2s, box-shadow 0.3s;
-  font-size: 1.05rem; 
-  box-shadow: 0 4px 12px rgba(248, 215, 123, 0.15); 
+  font-size: 1.05rem;
+  box-shadow: 0 4px 12px rgba(248, 215, 123, 0.15);
 }
 
 .sidebar .menu-btn:hover,
 .sidebar .menu-btn.active {
   transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(248,215,123,0.3);
+  box-shadow: 0 0 12px rgba(248, 215, 123, 0.3);
 }
 
 /* Botão Sair vermelho */
@@ -338,16 +373,12 @@ body {
   left: 0;
   width: 100%;
   height: 100vh;
-
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(1px);
-
   opacity: 0;
   pointer-events: none;
-
   transition: opacity 0.25s ease;
-
-  z-index: 9998; 
+  z-index: 9998;
 }
 
 #overlay.active {
@@ -369,64 +400,42 @@ body {
   padding-bottom: 2rem;
 }
 
-/* ================= CARD DE PEDIDO (VISUAL MELHORADO) ================= */
+/* ================= CARD DE PEDIDO ================= */
 .card-pedido {
-  /* Fundo sutilmente mais claro/profundo */
-  background: linear-gradient(145deg, #252525, #1e1e1e); 
-  
-  /* Borda base - será sobrescrita pela cor de status */
-  border: 1px solid rgba(255, 255, 255, 0.08); 
-  border-radius: 18px; /* Cantos mais arredondados */
+  background: linear-gradient(145deg, #252525, #1e1e1e);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
   padding: 1rem;
-  flex: 1 1 calc(25% - 1.5rem);
-  min-width: 260px;
-  max-width: 300px;
+  flex: 0 0 282px;
+  min-width: 282px;
+  max-width: 282px;
   height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-  
-  /* Sombra de "elevação" (Neumorfismo) */
   box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.4), -5px -5px 12px rgba(45, 45, 45, 0.15);
-  overflow-y: auto;
-  
-  /* As linhas scrollbar-width e scrollbar-color foram removidas para evitar o erro do VS Code */
-}
-
-/* Scrollbar para Chrome/Edge (Customização) - ESTAS ESTÃO RESTAURADAS */
-.card-pedido::-webkit-scrollbar {
-  width: 6px;
-}
-.card-pedido::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ffd651, #ffdc68);
-  border-radius: 5px;
-}
-.card-pedido::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ffe88a, #ffd651);
-}
-.card-pedido::-webkit-scrollbar-track {
-  background: #111;
-  border-radius: 5px;
 }
 
 /* Bordas de Status (Card Inteiro) - CORES VÍVIDAS */
-.card-pedido.aguardando { 
-    border: 3px solid #FF4C4C; /* Vermelho mais vivo */
-    box-shadow: 0 0 10px rgba(255, 76, 76, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6); /* Sombra vibrante */
+.card-pedido.aguardando {
+  border: 3px solid #FF4C4C;
+  box-shadow: 0 0 10px rgba(255, 76, 76, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6);
 }
-.card-pedido.preparo { 
-    border: 3px solid #FFC107; /* Amarelo mais intenso */
-    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6); /* Sombra vibrante */
+
+.card-pedido.preparo {
+  border: 3px solid #FFC107;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6);
 }
-.card-pedido.finalizados { 
-    border: 3px solid #28A745; /* Verde mais escuro e vivo */
-    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6); /* Sombra vibrante */
+
+.card-pedido.finalizados {
+  border: 3px solid #28A745;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6);
 }
 
 /* Hover do card com feedback visual mais forte */
 .card-pedido.aguardando:hover {
-  transform: translateY(-3px); 
+  transform: translateY(-3px);
   box-shadow: 0 0 30px rgba(255, 76, 76, 0.4), 8px 8px 15px rgba(0, 0, 0, 0.8);
   background: linear-gradient(145deg, #2b0f0f, #3a1111);
 }
@@ -446,50 +455,53 @@ body {
 /* ================= URGENTE ================= */
 .card-pedido.urgente {
   /* Borda dupla mais visível e sombra mais forte */
-  box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255,76,76,0.8), 8px 8px 15px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255, 76, 76, 0.8), 8px 8px 15px rgba(0, 0, 0, 0.9);
   animation: pulse-urgente 1s infinite alternate;
 }
 
 @keyframes pulse-urgente {
-  0% { box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255,76,76,0.8), 8px 8px 15px rgba(0, 0, 0, 0.9); }
-  50% { box-shadow: 0 0 0 5.5px #ff4c4c, 0 0 30px rgba(255,76,76,1), 8px 8px 15px rgba(0, 0, 0, 0.9); }
-  100% { box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255,76,76,0.8), 8px 8px 15px rgba(0, 0, 0, 0.9); }
+  0% {
+    box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255, 76, 76, 0.8), 8px 8px 15px rgba(0, 0, 0, 0.9);
+  }
+
+  50% {
+    box-shadow: 0 0 0 5.5px #ff4c4c, 0 0 30px rgba(255, 76, 76, 1), 8px 8px 15px rgba(0, 0, 0, 0.9);
+  }
+
+  100% {
+    box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255, 76, 76, 0.8), 8px 8px 15px rgba(0, 0, 0, 0.9);
+  }
 }
 
 /* Header do card (MELHORADO) */
 .card-header {
   flex: 0 0 auto;
   margin-bottom: 0.7rem;
-  
-  /* Fundo de alto contraste para destaque */
-  background: #111111; 
+  background: #111111;
   border: 1px solid #ffd651;
   color: #fff;
   padding: 0.6rem 0.7rem;
   border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  
-  /* Usar Flexbox para alinhar Mesa/Cliente e Tempo */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .card-header span {
-    text-align: left;
+  text-align: left;
 }
 
 .card-header .tempo {
-    /* Destacar o cronômetro com a cor primária */
-    color: #ffd651; 
-    font-size: 1.1rem;
-    font-weight: 800;
-    text-shadow: 0 0 5px rgba(255, 214, 81, 0.6);
+  color: #ffd651;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-shadow: 0 0 5px rgba(255, 214, 81, 0.6);
 }
 
-/* Conteúdo do card */
+/* Conteúdo do card - A rolagem e customização VÃO AQUI */
 .card-content {
   flex: 1;
   overflow-y: auto;
@@ -500,12 +512,30 @@ body {
   gap: 0.5rem;
 }
 
+/* Scrollbar para Chrome/Edge (Customização) - APLICADO AO CARD-CONTENT */
+.card-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffd651, #ffdc68);
+  border-radius: 5px;
+}
+
+.card-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffe88a, #ffd651);
+}
+
+.card-content::-webkit-scrollbar-track {
+  background: #111;
+  border-radius: 5px;
+}
+
 /* ================= ITENS (MELHORADO) ================= */
 .item-pedido {
-  /* Fundo mais discreto para focar no conteúdo */
   background: #141414;
   border-radius: 10px;
-  border-left: 4px solid #444; /* Barra lateral sutil para os itens internos */
+  border-left: 4px solid #444;
   border-right: 1px solid rgba(248, 215, 123, 0.05);
   padding: 0.8rem 1rem;
   transition: transform 0.2s, background 0.3s, box-shadow 0.3s, border 0.3s;
@@ -516,7 +546,7 @@ body {
   transform: translateX(3px);
   box-shadow: 0 2px 10px rgba(248, 215, 123, 0.15);
   background: #1a1a1a;
-  border-left-color: #f8d77b; /* Destaca a barra ao passar o mouse */
+  border-left-color: #f8d77b;
 }
 
 /* PRODUTO - Cor Dourado Mais Claro (Alto Contraste) */
@@ -524,58 +554,51 @@ body {
   display: block;
   margin-bottom: 0.3rem;
   font-weight: 700;
-  font-size: 1.05rem; 
-  color: #FFD77F; 
-}
-
-/* NOTA EXTRA ANTIGA (Não Usada, mas mantida por garantia) */
-.nota-extra {
-  font-size: 0.85rem;
-  color: #f8d77b; 
-  margin-bottom: 0.3rem;
-  font-weight: 600;
-  text-shadow: 0 0 3px #ffd12c;
+  font-size: 1.05rem;
+  color: #FFD77F;
 }
 
 /* Estilo para a nova Observação do Cliente */
 .itens .nota-cliente {
-    font-size: 0.9rem;
-    color: #ffd651; /* Cor primária para destaque */
-    background: #2a2a2a; /* Fundo sutil para separação */
-    padding: 0.4rem 0.6rem;
-    margin-top: 0.5rem;
-    border-radius: 6px;
-    border-left: 3px solid #f8d77b; /* Barra lateral para visualização rápida */
-    font-weight: 500;
-    line-height: 1.4;
-    font-style: normal; 
+  font-size: 0.9rem;
+  color: #ffd651;
+  background: #2a2a2a;
+  padding: 0.4rem 0.6rem;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  border-left: 3px solid #f8d77b;
+  font-weight: 500;
+  line-height: 1.4;
+  font-style: normal;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* Estilo para Itens Prontos */
 .item-pedido.pronto {
-    background: #152515; 
-    border-left-color: #5cb85c;
-    color: #aaa;
-    opacity: 0.7;
-    text-decoration: none; 
+  background: #152515;
+  border-left-color: #5cb85c;
+  color: #aaa;
+  opacity: 0.7;
+  text-decoration: none;
 }
 
 .item-pedido.pronto strong {
-    color: #999;
-    text-decoration: line-through; 
+  color: #999;
+  text-decoration: line-through;
 }
 
 .item-pedido.pronto:hover {
-    background: #1a2a1a;
-    transform: none; 
-    box-shadow: none;
+  background: #1a2a1a;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Estilo da observação em itens prontos */
 .item-pedido.pronto .nota-cliente {
-    color: #ccc; 
-    background: #1c1c1c; 
-    border-left-color: #999;
+  color: #ccc;
+  background: #1c1c1c;
+  border-left-color: #999;
 }
 
 
@@ -589,23 +612,40 @@ body {
 .btn {
   flex: 1;
   padding: 0.6rem;
-  border-radius: 8px; /* Mais quadrados */
-  font-weight: 700; /* Mais peso na fonte */
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.2s;
   white-space: nowrap;
-  
-  /* Base para o efeito "pressionado" */
   border: none;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4), -2px -2px 5px rgba(45, 45, 45, 0.15);
 }
 
 /* Cores dos Botões */
-.btn.cancelar { background: linear-gradient(145deg, #b02626, #d9534f); color: #fff; }
-.btn.preparar { background: linear-gradient(145deg, #da9342, #f0bd4e); color: #fff; }
-.btn.entregar { background: linear-gradient(145deg, #acda42, #3ec400); color: #fff; }
-.btn.finalizar { background: linear-gradient(145deg, #56bd56, #6ac26a); color: #fff; }
-.btn.voltar { background: linear-gradient(145deg, #ffd651, #9e7c1f); color: #fff; }
+.btn.cancelar {
+  background: linear-gradient(145deg, #b02626, #d9534f);
+  color: #fff;
+}
+
+.btn.preparar {
+  background: linear-gradient(145deg, #da9342, #f0bd4e);
+  color: #fff;
+}
+
+.btn.entregar {
+  background: linear-gradient(145deg, #acda42, #3ec400);
+  color: #fff;
+}
+
+.btn.finalizar {
+  background: linear-gradient(145deg, #56bd56, #6ac26a);
+  color: #fff;
+}
+
+.btn.voltar {
+  background: linear-gradient(145deg, #ffd651, #9e7c1f);
+  color: #fff;
+}
 
 .btn:hover {
   transform: scale(1.05);
@@ -614,8 +654,8 @@ body {
 }
 
 .btn:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5), inset 2px 2px 5px rgba(0, 0, 0, 0.5); /* Efeito de botão pressionado */
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5), inset 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 /* === GARANTE A REMOÇÃO DE CARDS DE PEDIDO DA TELA DE CONFIGURAÇÕES === */
@@ -644,7 +684,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(11, 11, 11, 0.637); 
+  background: rgba(11, 11, 11, 0.637);
   backdrop-filter: blur(1px);
   justify-content: center;
   align-items: center;
@@ -658,7 +698,7 @@ body {
 }
 
 .modal-content {
-  background: linear-gradient(145deg, #1f1f1f, #16120d); 
+  background: linear-gradient(145deg, #1f1f1f, #16120d);
   border: 2px solid #f8d77b;
   padding: 2rem;
   border-radius: 15px;
@@ -722,12 +762,12 @@ body {
 }
 
 
-/* ====================== TELA DE CONFIGURAÇÕES ====================== */
+/* ====================== TELA DE CONFIGURAÇÕES (REFINADO) ====================== */
 #configuracoes {
   display: flex;
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: flex-start; 
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -736,156 +776,288 @@ body {
   animation: fadeIn 0.25s ease;
 }
 
-/* Wrapper para agrupar cards lado a lado e centralizá-los */
 .config-cards-wrapper {
   display: flex;
-  flex-wrap: wrap; 
-  justify-content: center; 
-  align-items: flex-start; 
-  gap: 2rem; 
+  justify-content: center;
   width: 100%;
-  max-width: 900px; 
+  max-width: 900px;
 }
 
-/* Título principal da tela de Configurações */
 .config-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #ffd651;
-    margin-bottom: 2.5rem; 
-    text-shadow: 0 0 10px rgba(255, 214, 81, 0.4);
-    text-align: center;
+  font-size: 2.8rem; 
+  font-weight: 800;
+  color: #ffd651;
+  margin-bottom: 3.5rem;
+  text-shadow: 0 0 15px rgba(255, 214, 81, 0.6);
+  letter-spacing: 1px;
+  text-align: center;
 }
 
 /* Card Principal: Banco de Dados */
 .config-card {
-    background: linear-gradient(145deg, #1c1c1c, #111111); 
-    border: 2px solid #2e2e2e;
-    border-radius: 18px; 
-    padding: 2rem;
-    max-width: 450px;
-    width: 100%;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 214, 81, 0.1);
-    margin-bottom: 0; 
+  background: linear-gradient(145deg, #1c1c1c, #111111);
+  border: 2px solid #2e2e2e;
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 
+              0 0 20px rgba(255, 214, 81, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.config-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 
+              0 0 30px rgba(255, 214, 81, 0.25);
 }
 
 .config-card h2 {
-    font-size: 1.4rem;
-    color: #ffd651;
-    border-bottom: 2px solid rgba(255, 214, 81, 0.2);
-    padding-bottom: 0.8rem;
-    margin-bottom: 1.2rem;
-    font-weight: 600;
-    text-align: left;
+  font-size: 1.6rem;
+  color: #ffd651;
+  border-bottom: 2px solid rgba(255, 214, 81, 0.3);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  text-align: center;
 }
 
-.config-card p {
-    font-size: 0.95rem;
-    color: #cccccc;
-    line-height: 1.6;
-    margin: 0.4rem 0;
-    text-align: left;
-}
-
-.config-card strong {
-    color: #f8d77b;
-    font-weight: 700;
-}
-
-/* Botão "Testar Conexão" */
-#configuracoes .btn.testar {
-  background: linear-gradient(145deg, #ffd651, #f8d77b);
-  color: #000;
-  border: none;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s;
-  width: auto;
-  margin-top: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-
-#configuracoes .btn.testar:hover {
-  background: #ffea9d;
-  transform: scale(1.03);
-}
-
-/* Indicadores de Status Dinâmico (para o JS aplicar) */
+/* Configurações de Status e Detalhes */
 .config-status-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+  padding: 1rem 0;
 }
 
+/* CORREÇÃO APLICADA: Tamanho de fonte reduzido para p */
+.config-status-wrapper > p {
+    text-align: left;
+    font-size: 0.95rem; 
+    color: #cccccc;
+}
+
+/* Estilo do indicador de status */
 #status-banco {
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: color 0.3s ease;
-    padding: 0.3rem 0; 
+  font-weight: bold;
+  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Estados */
+/* Novo: Cria o ponto de luz antes do status */
+#status-banco::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #555;
+  box-shadow: 0 0 5px #555;
+  transition: all 0.3s ease;
+}
+
+/* Estados Dinâmicos com Cores e Brilho (Neon Effect) */
 .status-indicator.online {
-    color: #4caf50; 
-    text-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  color: #5cb85c;
+  text-shadow: 0 0 8px rgba(92, 184, 92, 0.8);
+}
+
+.status-indicator.online::before {
+  background: #5cb85c;
+  box-shadow: 0 0 10px #5cb85c, 0 0 20px #5cb85c;
 }
 
 .status-indicator.offline {
-    color: #e53935; 
-    text-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
+  color: #d9534f;
+  text-shadow: 0 0 8px rgba(217, 83, 79, 0.8);
+}
+
+.status-indicator.offline::before {
+  background: #d9534f;
+  box-shadow: 0 0 10px #d9534f, 0 0 20px #d9534f;
 }
 
 .status-indicator.testando {
-    color: #ffd651; 
-    text-shadow: 0 0 8px rgba(255, 214, 81, 0.6);
+  color: #ffd651;
+  text-shadow: 0 0 8px rgba(255, 214, 81, 0.8);
 }
 
-/* Animação ao trocar de tela */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.status-indicator.testando::before {
+  background: #ffd651;
+  box-shadow: 0 0 10px #ffd651, 0 0 20px #ffd651;
 }
 
-@keyframes pulse {
-  0%, 100% { text-shadow: 0 0 10px #f8d77b, 0 0 20px #ffd12c; }
-  50% { text-shadow: 0 0 20px #f8d77b, 0 0 30px #ffd12c; }
+/* Detalhes do Host/Porta mais organizados (LISTA UL) */
+.details-list {
+  list-style: none; 
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ================= RESPONSIVIDADE ================= */
-@media (max-width: 1024px) {
-  .sidebar { width: 220px; }
-  .sidebar.active ~ .content { padding-left: 240px; }
-  .card-pedido { flex: 1 1 calc(33.33% - 1.5rem); }
-  .header { padding-left: 22.4rem; } 
+.details-list li {
+  font-size: 1rem;
+  color: #aaa;
+  padding: 0.2rem 0;
+  border-left: 3px solid rgba(248, 215, 123, 0.3); 
+  padding-left: 10px;
+}
+
+.details-list strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Estiliza os novos campos de atualização e erro */
+/* CORREÇÃO APLICADA: Tamanho de fonte padronizado para 1rem */
+.config-status-wrapper > p strong#last-update {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem; /* CORRIGIDO: Padrão 1rem */
+}
+
+/* CORREÇÃO APLICADA: Tamanho de fonte menor para erro */
+.config-status-wrapper > p strong#last-error {
+    color: #e6b3b3; 
+    font-weight: 500;
+    font-size: 0.9rem; /* CORRIGIDO: 0.9rem para ser mais sutil */
+    line-height: 1.4;
+    margin-top: 0.5rem; 
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Botão Testar */
+#configuracoes .btn.testar {
+  margin-top: 2rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  width: 100%;
+  background: linear-gradient(145deg, #ffd651, #fcdc76); 
+  color: #111;
+  border: 1px solid #ffd651;
+}
+
+/* ====================== RESPONSIVIDADE ====================== */
+@media (max-width: 1200px) {
+  .pedidos-container {
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 992px) {
+  .header {
+    padding-left: 0;
+    justify-content: center;
+  }
+  
+  .menu-toggle {
+    left: auto;
+    right: 1.5rem;
+    top: 1.5rem;
+    width: 45px;
+    height: 30px;
+  }
+
+  .menu-toggle.active {
+    filter: drop-shadow(0 4px 8px rgba(248, 215, 123, 0.4));
+  }
+
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+  }
+  
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .header-wrapper {
+    padding: 6.5rem 3% 1rem; 
+    align-items: center;
+  }
+
+  .pedidos-container {
+    padding-top: 10rem;
+  }
+
+  #configuracoes {
+    padding-top: 8rem;
+  }
+  
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
+    left: -300px;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+  
+  .status-btn {
+    width: 150px;
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .header { 
-    flex-direction: column; 
-    gap: 1rem; 
-    padding-left: 0.5rem; 
-    padding-top: 8rem;
-    padding-bottom: 1rem;
+  .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
+
   .header-wrapper {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 6.5rem 1rem 1rem; 
   }
-  .status-btn { width: 100%; }
-  .card-pedido { width: 100%; flex: 1 1 100%; }
-  .pedidos-container { padding-top: 20rem; } 
-  .sidebar { width: 200px; }
-  .sidebar.active ~ .content { padding-left: 220px; }
-  .sidebar .menu-btn {
-    padding: 1.2rem 1.8rem;
+
+  .status-btn {
+    width: 100%;
+    max-width: 180px;
   }
-  .menu-toggle {
-    top: 1.5rem; 
+
+  .config-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
   }
-  #configuracoes {
-    padding-top: 10rem;
+
+  .config-card {
+    padding: 2rem;
+  }
+  
+  .config-card h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-pedido {
+    flex: 0 0 95%;
+    max-width: 95%;
+    min-width: 95%;
+  }
+
+  .dropdown-btn {
+    width: 100px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .status-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .config-card {
+    padding: 1.5rem;
+  }
+  
+  .config-status-wrapper > p {
+    font-size: 1rem;
   }
 }
