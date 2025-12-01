@@ -1,4 +1,4 @@
-/* ================= RESET E FONTES ================= */ 
+/* ================= RESET E FONTES ================= */
 * {
   margin: 0;
   padding: 0;
@@ -260,14 +260,14 @@ body {
   padding: 110px 1.5rem 2.5rem;
   transition: left 0.3s ease;
   z-index: 9999;
-  border-right: none; /* Remover borda padrão */
+  border-right: none; 
   backdrop-filter: blur(3px);
 }
 
 .sidebar.active {
   left: 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.08); /* Borda visível quando ativo */
-  box-shadow: 4px 0 20px #f8d77b; /* Efeito brilhante visível quando ativo */
+  border-right: 1px solid rgba(255, 255, 255, 0.08); 
+  box-shadow: 4px 0 20px #f8d77b; 
 }
 
 .sidebar h2.logo {
@@ -292,14 +292,14 @@ body {
   background: #1a1a1a;
   border: 1px solid #f8d77b;
   color: #f8d77b;
-  padding: 1.2rem 1.5rem; /* Aumentar o padding vertical para botões maiores */
+  padding: 1.2rem 1.5rem; 
   border-radius: 12px;
   cursor: pointer;
   text-align: center;
   font-weight: 600;
   transition: 0.3s, transform 0.2s, box-shadow 0.3s;
-  font-size: 1.05rem; /* Tamanho de fonte ajustado */
-  box-shadow: 0 4px 12px rgba(248, 215, 123, 0.15); /* Sombra mais forte */
+  font-size: 1.05rem; 
+  box-shadow: 0 4px 12px rgba(248, 215, 123, 0.15); 
 }
 
 .sidebar .menu-btn:hover,
@@ -347,7 +347,7 @@ body {
 
   transition: opacity 0.25s ease;
 
-  z-index: 9998; /* deixa TUDO por baixo apagado */
+  z-index: 9998; 
 }
 
 #overlay.active {
@@ -369,11 +369,14 @@ body {
   padding-bottom: 2rem;
 }
 
-/* ================= CARD DE PEDIDO ================= */
+/* ================= CARD DE PEDIDO (VISUAL MELHORADO) ================= */
 .card-pedido {
-  background: linear-gradient(145deg, #202020, #202020);
-  border: 2px solid #444;
-  border-radius: 15px;
+  /* Fundo sutilmente mais claro/profundo */
+  background: linear-gradient(145deg, #252525, #1e1e1e); 
+  
+  /* Borda base - será sobrescrita pela cor de status */
+  border: 1px solid rgba(255, 255, 255, 0.08); 
+  border-radius: 18px; /* Cantos mais arredondados */
   padding: 1rem;
   flex: 1 1 calc(25% - 1.5rem);
   min-width: 260px;
@@ -383,13 +386,15 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-  box-shadow: 0 4px 10px rgba(248, 215, 123, 0.1);
+  
+  /* Sombra de "elevação" (Neumorfismo) */
+  box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.4), -5px -5px 12px rgba(45, 45, 45, 0.15);
   overflow-y: auto;
-  scrollbar-width: thin;             /* Firefox */
-  scrollbar-color: #ffd651 #111;    /* Firefox thumb e track */
+  
+  /* As linhas scrollbar-width e scrollbar-color foram removidas para evitar o erro do VS Code */
 }
 
-/* Scrollbar */
+/* Scrollbar para Chrome/Edge (Customização) - ESTAS ESTÃO RESTAURADAS */
 .card-pedido::-webkit-scrollbar {
   width: 6px;
 }
@@ -404,57 +409,84 @@ body {
   background: #111;
   border-radius: 5px;
 }
-.card-pedido.aguardando { border-color: #d9534f; }
-.card-pedido.preparo { border-color: #f0ad4e; }
-.card-pedido.finalizados { border-color: #5cb85c; }
 
-/* Hover do card */
+/* Bordas de Status (Card Inteiro) - CORES VÍVIDAS */
+.card-pedido.aguardando { 
+    border: 3px solid #FF4C4C; /* Vermelho mais vivo */
+    box-shadow: 0 0 10px rgba(255, 76, 76, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6); /* Sombra vibrante */
+}
+.card-pedido.preparo { 
+    border: 3px solid #FFC107; /* Amarelo mais intenso */
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6); /* Sombra vibrante */
+}
+.card-pedido.finalizados { 
+    border: 3px solid #28A745; /* Verde mais escuro e vivo */
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5), 8px 8px 15px rgba(0, 0, 0, 0.6); /* Sombra vibrante */
+}
+
+/* Hover do card com feedback visual mais forte */
 .card-pedido.aguardando:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 25px rgba(217, 83, 79, 0.6);
-  border-color: #ff4c4c;
+  transform: translateY(-3px); 
+  box-shadow: 0 0 30px rgba(255, 76, 76, 0.4), 8px 8px 15px rgba(0, 0, 0, 0.8);
   background: linear-gradient(145deg, #2b0f0f, #3a1111);
 }
 
 .card-pedido.preparo:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 25px rgba(240, 173, 78, 0.6);
-  border-color: #ffd966;
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px #ffc10766, 8px 8px 15px rgba(0, 0, 0, 0.8);
   background: linear-gradient(145deg, #3a2a1a, #4e381f);
 }
 
 .card-pedido.finalizados:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 25px rgba(92, 184, 92, 0.6);
-  border-color: #7ce57c;
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(40, 167, 69, 0.4), 8px 8px 15px rgba(0, 0, 0, 0.8);
   background: linear-gradient(145deg, #1c3a1c, #245124);
 }
 
 /* ================= URGENTE ================= */
 .card-pedido.urgente {
-  box-shadow: 0 0 0 3px #ff4c4c, 0 0 20px rgba(255,76,76,0.6);
+  /* Borda dupla mais visível e sombra mais forte */
+  box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255,76,76,0.8), 8px 8px 15px rgba(0, 0, 0, 0.9);
   animation: pulse-urgente 1s infinite alternate;
 }
 
 @keyframes pulse-urgente {
-  0% { box-shadow: 0 0 0 3px #ff4c4c, 0 0 20px rgba(255,76,76,0.6); }
-  50% { box-shadow: 0 0 0 4.5px #ff4c4c, 0 0 25px rgba(255,76,76,0.8); }
-  100% { box-shadow: 0 0 0 3px #ff4c4c, 0 0 20px rgba(255,76,76,0.6); }
+  0% { box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255,76,76,0.8), 8px 8px 15px rgba(0, 0, 0, 0.9); }
+  50% { box-shadow: 0 0 0 5.5px #ff4c4c, 0 0 30px rgba(255,76,76,1), 8px 8px 15px rgba(0, 0, 0, 0.9); }
+  100% { box-shadow: 0 0 0 4px #ff4c4c, 0 0 25px rgba(255,76,76,0.8), 8px 8px 15px rgba(0, 0, 0, 0.9); }
 }
 
-/* Header do card */
+/* Header do card (MELHORADO) */
 .card-header {
   flex: 0 0 auto;
   margin-bottom: 0.7rem;
-  background: linear-gradient(90deg, #ffd651, #ffdc68);
-  color: #000;
-  padding: 0.5rem 0.7rem;
-  border-radius: 10px;
+  
+  /* Fundo de alto contraste para destaque */
+  background: #111111; 
+  border: 1px solid #ffd651;
+  color: #fff;
+  padding: 0.6rem 0.7rem;
+  border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 700;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  text-shadow: 0 0 3px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  
+  /* Usar Flexbox para alinhar Mesa/Cliente e Tempo */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header span {
+    text-align: left;
+}
+
+.card-header .tempo {
+    /* Destacar o cronômetro com a cor primária */
+    color: #ffd651; 
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-shadow: 0 0 5px rgba(255, 214, 81, 0.6);
 }
 
 /* Conteúdo do card */
@@ -468,60 +500,86 @@ body {
   gap: 0.5rem;
 }
 
-/* ================= ITENS ================= */
+/* ================= ITENS (MELHORADO) ================= */
 .item-pedido {
-  background: linear-gradient(120deg, #161616, #111111);
-  border-radius: 8px;
-  border: 1px solid rgba(248, 215, 123, 0.1);
-  padding: 0.6rem 0.8rem;
+  /* Fundo mais discreto para focar no conteúdo */
+  background: #141414;
+  border-radius: 10px;
+  border-left: 4px solid #444; /* Barra lateral sutil para os itens internos */
+  border-right: 1px solid rgba(248, 215, 123, 0.05);
+  padding: 0.8rem 1rem;
   transition: transform 0.2s, background 0.3s, box-shadow 0.3s, border 0.3s;
   cursor: pointer;
 }
 
 .item-pedido:hover {
-  transform: translateX(2px);
-  box-shadow: 0 2px 10px rgba(248, 215, 123, 0.25);
-  background: linear-gradient(120deg, #1f1f1f, #1a1a1a);
+  transform: translateX(3px);
+  box-shadow: 0 2px 10px rgba(248, 215, 123, 0.15);
+  background: #1a1a1a;
+  border-left-color: #f8d77b; /* Destaca a barra ao passar o mouse */
 }
 
+/* PRODUTO - Cor Dourado Mais Claro (Alto Contraste) */
 .item-pedido strong {
   display: block;
   margin-bottom: 0.3rem;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.05rem; 
+  color: #FFD77F; 
 }
 
+/* NOTA EXTRA ANTIGA (Não Usada, mas mantida por garantia) */
 .nota-extra {
   font-size: 0.85rem;
-  color: #ffd651;
+  color: #f8d77b; 
   margin-bottom: 0.3rem;
   font-weight: 600;
   text-shadow: 0 0 3px #ffd12c;
 }
 
-.itens p {
-  font-size: 0.9rem;
-  color: #fff1be;
-  margin-left: 0.5rem;
-  line-height: 1.3;
+/* Estilo para a nova Observação do Cliente */
+.itens .nota-cliente {
+    font-size: 0.9rem;
+    color: #ffd651; /* Cor primária para destaque */
+    background: #2a2a2a; /* Fundo sutil para separação */
+    padding: 0.4rem 0.6rem;
+    margin-top: 0.5rem;
+    border-radius: 6px;
+    border-left: 3px solid #f8d77b; /* Barra lateral para visualização rápida */
+    font-weight: 500;
+    line-height: 1.4;
+    font-style: normal; 
 }
 
-.itens p + p {
-  border-top: 1px solid rgba(248, 215, 123, 0.05);
-  padding-top: 0.2rem;
-  margin-top: 0.2rem;
+/* Estilo para Itens Prontos */
+.item-pedido.pronto {
+    background: #152515; 
+    border-left-color: #5cb85c;
+    color: #aaa;
+    opacity: 0.7;
+    text-decoration: none; 
 }
 
-.bebida-adicional {
-  color: #56bd56;
-  font-style: italic;
-  font-weight: 600;
-  margin-left: 0.5rem;
-  border-left: 2px solid #56bd56;
-  padding-left: 0.3rem;
+.item-pedido.pronto strong {
+    color: #999;
+    text-decoration: line-through; 
 }
 
-/* ================= BOTÕES DE AÇÃO NOS CARDS ================= */
+.item-pedido.pronto:hover {
+    background: #1a2a1a;
+    transform: none; 
+    box-shadow: none;
+}
+
+/* Estilo da observação em itens prontos */
+.item-pedido.pronto .nota-cliente {
+    color: #ccc; 
+    background: #1c1c1c; 
+    border-left-color: #999;
+}
+
+
+/* ================= BOTÕES DE AÇÃO NOS CARDS (MELHORADO) ================= */
 .actions {
   display: flex;
   justify-content: center;
@@ -530,15 +588,19 @@ body {
 
 .btn {
   flex: 1;
-  padding: 0.5rem;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 0.6rem;
+  border-radius: 8px; /* Mais quadrados */
+  font-weight: 700; /* Mais peso na fonte */
   cursor: pointer;
-  transition: 0.3s, transform 0.2s, filter 0.3s, background 0.3s;
+  transition: 0.2s;
   white-space: nowrap;
-  border: 1px solid #f8d77b;
+  
+  /* Base para o efeito "pressionado" */
+  border: none;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4), -2px -2px 5px rgba(45, 45, 45, 0.15);
 }
 
+/* Cores dos Botões */
 .btn.cancelar { background: linear-gradient(145deg, #b02626, #d9534f); color: #fff; }
 .btn.preparar { background: linear-gradient(145deg, #da9342, #f0bd4e); color: #fff; }
 .btn.entregar { background: linear-gradient(145deg, #acda42, #3ec400); color: #fff; }
@@ -551,32 +613,16 @@ body {
   box-shadow: 0 0 8px rgba(248, 215, 123, 0.25);
 }
 
-/* ================= CONFIG ================= */
-#config {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  min-height: 60vh;
+.btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5), inset 2px 2px 5px rgba(0, 0, 0, 0.5); /* Efeito de botão pressionado */
 }
 
-#config .btn.testar {
-  flex: 0;
-  width: auto;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 8px;
+/* === GARANTE A REMOÇÃO DE CARDS DE PEDIDO DA TELA DE CONFIGURAÇÕES === */
+#configuracoes .card-pedido {
+  display: none !important;
+  visibility: hidden !important;
 }
-
-#config h2 {
-  color: #f8d77b;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 5px #ffd12c;
-}
-
-.status-indicator.online { color: #5cb85c; font-weight: bold; }
-.status-indicator.offline { color: #d9534f; font-weight: bold; }
 
 /* ================= TEXTO SEM PEDIDOS ================= */
 .sem-pedidos {
@@ -598,7 +644,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(11, 11, 11, 0.637); /* escuro e translúcido */
+  background: rgba(11, 11, 11, 0.637); 
   backdrop-filter: blur(1px);
   justify-content: center;
   align-items: center;
@@ -612,7 +658,7 @@ body {
 }
 
 .modal-content {
-  background: linear-gradient(145deg, #1f1f1f, #16120d); /* gradiente do site */
+  background: linear-gradient(145deg, #1f1f1f, #16120d); 
   border: 2px solid #f8d77b;
   padding: 2rem;
   border-radius: 15px;
@@ -657,13 +703,13 @@ body {
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
 }
 
-.modal button.confirm {
+.modal button.confirmar {
   background: linear-gradient(145deg, #56bd56, #6ac26a);
   border-color: #56bd56;
   color: #fff;
 }
 
-.modal button.cancel {
+.modal button.cancelar {
   background: linear-gradient(145deg, #b02626, #d9534f);
   border-color: #ff4c4c;
   color: #fff;
@@ -676,9 +722,131 @@ body {
 }
 
 
+/* ====================== TELA DE CONFIGURAÇÕES ====================== */
+#configuracoes {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: flex-start; 
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12rem 1.5rem 2rem;
+  color: #f8d77b;
+  animation: fadeIn 0.25s ease;
+}
+
+/* Wrapper para agrupar cards lado a lado e centralizá-los */
+.config-cards-wrapper {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 2rem; 
+  width: 100%;
+  max-width: 900px; 
+}
+
+/* Título principal da tela de Configurações */
+.config-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffd651;
+    margin-bottom: 2.5rem; 
+    text-shadow: 0 0 10px rgba(255, 214, 81, 0.4);
+    text-align: center;
+}
+
+/* Card Principal: Banco de Dados */
+.config-card {
+    background: linear-gradient(145deg, #1c1c1c, #111111); 
+    border: 2px solid #2e2e2e;
+    border-radius: 18px; 
+    padding: 2rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 214, 81, 0.1);
+    margin-bottom: 0; 
+}
+
+.config-card h2 {
+    font-size: 1.4rem;
+    color: #ffd651;
+    border-bottom: 2px solid rgba(255, 214, 81, 0.2);
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+.config-card p {
+    font-size: 0.95rem;
+    color: #cccccc;
+    line-height: 1.6;
+    margin: 0.4rem 0;
+    text-align: left;
+}
+
+.config-card strong {
+    color: #f8d77b;
+    font-weight: 700;
+}
+
+/* Botão "Testar Conexão" */
+#configuracoes .btn.testar {
+  background: linear-gradient(145deg, #ffd651, #f8d77b);
+  color: #000;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+  width: auto;
+  margin-top: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+#configuracoes .btn.testar:hover {
+  background: #ffea9d;
+  transform: scale(1.03);
+}
+
+/* Indicadores de Status Dinâmico (para o JS aplicar) */
+.config-status-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#status-banco {
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    padding: 0.3rem 0; 
+}
+
+/* Estados */
+.status-indicator.online {
+    color: #4caf50; 
+    text-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+.status-indicator.offline {
+    color: #e53935; 
+    text-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
+}
+
+.status-indicator.testando {
+    color: #ffd651; 
+    text-shadow: 0 0 8px rgba(255, 214, 81, 0.6);
+}
+
+/* Animação ao trocar de tela */
 @keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(-10px); }
-  100% { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse {
@@ -691,16 +859,33 @@ body {
   .sidebar { width: 220px; }
   .sidebar.active ~ .content { padding-left: 240px; }
   .card-pedido { flex: 1 1 calc(33.33% - 1.5rem); }
+  .header { padding-left: 22.4rem; } 
 }
 
 @media (max-width: 768px) {
-  .header { flex-direction: column; gap: 1rem; padding-left: 0.5rem; }
-  .status-btn { width: 80%; }
+  .header { 
+    flex-direction: column; 
+    gap: 1rem; 
+    padding-left: 0.5rem; 
+    padding-top: 8rem;
+    padding-bottom: 1rem;
+  }
+  .header-wrapper {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  .status-btn { width: 100%; }
   .card-pedido { width: 100%; flex: 1 1 100%; }
+  .pedidos-container { padding-top: 20rem; } 
   .sidebar { width: 200px; }
   .sidebar.active ~ .content { padding-left: 220px; }
-   .sidebar .menu-btn {
-    padding: 1.2rem 1.8rem; /* Aumentar o padding ainda mais em telas menores para maior legibilidade */
+  .sidebar .menu-btn {
+    padding: 1.2rem 1.8rem;
+  }
+  .menu-toggle {
+    top: 1.5rem; 
+  }
+  #configuracoes {
+    padding-top: 10rem;
   }
 }
-

@@ -1,45 +1,45 @@
-// ====================== LISTA DE PEDIDOS ======================
+// ====================== LISTA DE PEDIDOS (REVISADA COM OBSERVAÇÃO) ======================
 const pedidos = [
   { mesa: 1, cliente: "Ricardo", tempoSegundos: 0, tempoEstimado: 35, status: "Aguardando", produtos: [
-    { nome: "PIZZA CORAÇÃO GRANDE", adicionais: ["+ CHEDDAR", "+ FINA", "+ DOBRO DO RECHEIO"] },
-    { nome: "REFRIGERANTE 2L", adicionais: [], bebida: true }
+    { nome: "PIZZA CORAÇÃO GRANDE", observacao: "Massa bem fina e sem azeitonas" },
+    { nome: "REFRIGERANTE 2L", observacao: "", bebida: true }
   ]},
   { mesa: 2, cliente: "Ana", tempoSegundos: 0, tempoEstimado: 25, status: "Aguardando", produtos: [
-    { nome: "PIZZA CALABRESA MÉDIA", adicionais: ["+ FINA", "+ DOBRO DO RECHEIO"] },
-    { nome: "BATATA FRITA", adicionais: ["+ KETCHUP"] },
-    { nome: "SUCO NATURAL", adicionais: ["+ LIMÃO"], bebida: true }
+    { nome: "PIZZA CALABRESA MÉDIA", observacao: "Sem pimenta e bem tostada" },
+    { nome: "BATATA FRITA", observacao: "Porção bem grande de molho especial" },
+    { nome: "SUCO NATURAL", observacao: "Com pouco gelo e adoçante", bebida: true }
   ]},
   { mesa: 3, cliente: "Carlos", tempoSegundos: 0, tempoEstimado: 25, status: "Finalizado", produtos: [
-    { nome: "PIZZA FRANGO GRANDE", adicionais: ["+ CATUPIRY"] }
+    { nome: "PIZZA FRANGO GRANDE", observacao: "Extra catupiry, por favor!" }
   ]},
   { mesa: 4, cliente: "Julia", tempoSegundos: 0, tempoEstimado: 15, status: "Em preparo", produtos: [
-    { nome: "HAMBÚRGUER DUPLO", adicionais: ["+ BACON", "+ QUEIJO EXTRA"] },
-    { nome: "COCA-COLA LATA", adicionais: [], bebida: true }
+    { nome: "HAMBÚRGUER DUPLO", observacao: "Pão tostado, sem tomate" },
+    { nome: "COCA-COLA LATA", observacao: "", bebida: true }
   ]},
   { mesa: 5, cliente: "Ricardo", tempoSegundos: 0, tempoEstimado: 40, status: "Em preparo", produtos: [
-    { nome: "PIZZA MARGUERITA GRANDE", adicionais: ["+ CATUPIRY", "+ FINA", "+ DOBRO DO RECHEIO"] },
-    { nome: "ÁGUA MINERAL", adicionais: [], bebida: true }
+    { nome: "PIZZA MARGUERITA GRANDE", observacao: "Queijo mussarela de búfala" },
+    { nome: "ÁGUA MINERAL", observacao: "", bebida: true }
   ]},
   { mesa: 6, cliente: "Fernanda", tempoSegundos: 0, tempoEstimado: 10, status: "Aguardando", produtos: [
-    { nome: "SALADA CEASAR", adicionais: ["+ FRANGO"] },
-    { nome: "SUCO DE LARANJA", adicionais: [], bebida: true }
+    { nome: "SALADA CEASAR", observacao: "Molho à parte" },
+    { nome: "SUCO DE LARANJA", observacao: "", bebida: true }
   ]},
   { mesa: 7, cliente: "João", tempoSegundos: 0, tempoEstimado: 12, status: "Em preparo", produtos: [
-    { nome: "LASANHA BOLONHESA", adicionais: [] },
-    { nome: "PÃO DE ALHO", adicionais: [] },
-    { nome: "REFRIGERANTE LATA", adicionais: [], bebida: true }
+    { nome: "LASANHA BOLONHESA", observacao: "Aquecer bem, bem quente" },
+    { nome: "PÃO DE ALHO", observacao: "" },
+    { nome: "REFRIGERANTE LATA", observacao: "Com gelo e limão", bebida: true }
   ]},
   { mesa: 8, cliente: "Mariana", tempoSegundos: 0, tempoEstimado: 10, status: "Aguardando", produtos: [
-    { nome: "PIZZA PORTUGUESA MÉDIA", adicionais: ["+ FINA"] },
-    { nome: "REFRIGERANTE 600ml", adicionais: [], bebida: true }
+    { nome: "PIZZA PORTUGUESA MÉDIA", observacao: "Sem cebola" },
+    { nome: "REFRIGERANTE 600ml", observacao: "Bem gelado!", bebida: true }
   ]},
   { mesa: 9, cliente: "Paulo", tempoSegundos: 0, tempoEstimado: 20, status: "Finalizado", produtos: [
-    { nome: "ESPAGUETE CARBONARA", adicionais: [] },
-    { nome: "SALADA MIX", adicionais: [] }
+    { nome: "ESPAGUETE CARBONARA", observacao: "Com ovo caipira" },
+    { nome: "SALADA MIX", observacao: "Mais azeite na salada" }
   ]},
   { mesa: 10, cliente: "Clara", tempoSegundos: 0, tempoEstimado: 20, status: "Aguardando", produtos: [
-    { nome: "PIZZA CALABRESA GRANDE", adicionais: ["+ FINA", "+ EXTRA QUEIJO"] },
-    { nome: "BATATA FRITA", adicionais: ["+ CHEDDAR"] }
+    { nome: "PIZZA CALABRESA GRANDE", observacao: "Borda recheada de cheddar" },
+    { nome: "BATATA FRITA", observacao: "Sem sal" }
   ]},
 ];
 
@@ -55,6 +55,8 @@ const PREPARO_URG_SECONDS = 1200; // 20 minutos
 // ====================== FUNÇÃO MODAL CUSTOMIZADO ======================
 function showCustomModal(title, message, showConfirm, callback) {
   const modal = document.getElementById("modal-confirmacao");
+  if (!modal) return;
+
   modal.querySelector(".modal-text").textContent = message;
   modal.style.display = "flex";
 
@@ -63,8 +65,8 @@ function showCustomModal(title, message, showConfirm, callback) {
 
   function cleanup() {
     modal.style.display = "none";
-    confirmarBtn.removeEventListener("click", onConfirm);
-    fecharBtn.removeEventListener("click", onCancel);
+    if (confirmarBtn) confirmarBtn.removeEventListener("click", onConfirm);
+    if (fecharBtn) fecharBtn.removeEventListener("click", onCancel);
   }
 
   function onConfirm() {
@@ -77,13 +79,14 @@ function showCustomModal(title, message, showConfirm, callback) {
     callback(false);
   }
 
-  confirmarBtn.addEventListener("click", onConfirm);
-  fecharBtn.addEventListener("click", onCancel);
+  if (confirmarBtn) confirmarBtn.addEventListener("click", onConfirm);
+  if (fecharBtn) fecharBtn.addEventListener("click", onCancel);
 }
 
 // ====================== FUNÇÕES DE PEDIDO ======================
 function togglePronto(indexPedido, indexProduto) {
   const pedido = pedidos[indexPedido];
+  if (!pedido) return;
   if (pedido.status === "Aguardando") return;
   pedido.produtos[indexProduto].pronto = !pedido.produtos[indexProduto].pronto;
 
@@ -95,20 +98,23 @@ function togglePronto(indexPedido, indexProduto) {
 
 function atualizarContagemBotoes() {
   const contagens = { "Aguardando": 0, "Em preparo": 0, "Finalizado": 0 };
-  pedidos.forEach(p => contagens[p.status]++);
+  pedidos.forEach(p => {
+    if (contagens[p.status] === undefined) contagens[p.status] = 0;
+    contagens[p.status]++;
+  });
 
   const aguardandoEl = document.querySelector(".status-btn.aguardando");
   const preparoEl = document.querySelector(".status-btn.preparo");
   const finalizadosEl = document.querySelector(".status-btn.finalizados");
   const todosEl = document.querySelector(".status-btn.todos");
 
-  if (aguardandoEl) aguardandoEl.textContent = `Aguardando (${contagens["Aguardando"]})`;
-  if (preparoEl) preparoEl.textContent = `Em preparo (${contagens["Em preparo"]})`;
-  if (finalizadosEl) finalizadosEl.textContent = `Finalizados (${contagens["Finalizado"]})`;
+  if (aguardandoEl) aguardandoEl.textContent = `Aguardando (${contagens["Aguardando"] || 0})`;
+  if (preparoEl) preparoEl.textContent = `Em preparo (${contagens["Em preparo"] || 0})`;
+  if (finalizadosEl) finalizadosEl.textContent = `Finalizados (${contagens["Finalizado"] || 0})`;
   if (todosEl) todosEl.textContent = `Todos (${pedidos.length})`;
 }
 
-// ====================== RENDER PEDIDOS ======================
+// ====================== RENDER PEDIDOS (ATUALIZADA) ======================
 function renderPedidos() {
   const container = document.getElementById("pedidos-container");
   if (!container) return;
@@ -125,7 +131,7 @@ function renderPedidos() {
 
   if (statusFiltro === "Todos") {
     const ordem = { "Aguardando": 0, "Em preparo": 1, "Finalizado": 2 };
-    pedidosFiltrados.sort((a, b) => ordem[a.status] - ordem[b.status]);
+    pedidosFiltrados.sort((a, b) => (ordem[a.status] || 99) - (ordem[b.status] || 99));
   }
 
   if (pedidosFiltrados.length === 0) {
@@ -152,12 +158,16 @@ function renderPedidos() {
 
     const produtosHTML = pedido.produtos.map(prod => {
       const classe = `item-pedido ${prod.pronto ? "pronto" : ""} ${prod.bebida ? "bebida" : ""}`;
-      const adicionaisHTML = (prod.adicionais || []).map(a => `<p>${a}</p>`).join("");
+      
+      // NOVO: Exibe a observação se ela existir
+      const observacaoHTML = prod.observacao ? 
+          `<p class="nota-cliente">${prod.observacao}</p>` : 
+          '';
 
       return `
         <div class="${classe}" onclick="togglePronto(${indexOriginal}, ${pedido.produtos.indexOf(prod)})">
           <strong>${prod.nome}</strong>
-          <div class="itens">${adicionaisHTML}</div>
+          <div class="itens">${observacaoHTML}</div>
         </div>
       `;
     }).join("");
@@ -199,6 +209,7 @@ function gerarBotoes(pedido, i) {
 }
 
 function preparar(i) {
+  if (!pedidos[i]) return;
   pedidos[i].status = "Em preparo";
   pedidos[i].prioridade = "Normal";
   pedidos[i].tempoSegundos = 0;
@@ -210,6 +221,7 @@ function preparar(i) {
 }
 
 function cancelar(i) {
+  if (!pedidos[i]) return;
   showCustomModal("Confirmação", "Você tem certeza que deseja cancelar este pedido?", true, (confirmed) => {
     if (confirmed) {
       pedidos.splice(i, 1);
@@ -219,6 +231,7 @@ function cancelar(i) {
 }
 
 function voltarEtapa(i) {
+  if (!pedidos[i]) return;
   pedidos[i].status =
     pedidos[i].status === "Finalizado" ? "Em preparo" : "Aguardando";
 
@@ -226,12 +239,14 @@ function voltarEtapa(i) {
 }
 
 function finalizar(i) {
+  if (!pedidos[i]) return;
   pedidos[i].status = "Finalizado";
   pedidos[i].prioridade = "Normal";
   renderPedidos();
 }
 
 function entregar(i) {
+  if (!pedidos[i]) return;
   pedidos.splice(i, 1);
   renderPedidos();
 }
@@ -442,7 +457,7 @@ function atualizarScrollCards() {
       }
     }
 
-        if (!precisaScroll && card.scrollHeight > card.clientHeight + 1)
+    if (!precisaScroll && card.scrollHeight > card.clientHeight + 1)
       precisaScroll = true;
 
     card.style.overflowY = precisaScroll ? 'auto' : 'hidden';
@@ -469,3 +484,135 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ====================== RENDER INICIAL ======================
 renderPedidos();
+
+// ====================== ADIÇÕES: TELA CONFIGURAÇÕES E NAVEGAÇÃO ======================
+
+const btnMenuPedidos = document.querySelector(".menu-btn.pedidos");
+const btnMenuConfig = document.querySelector(".menu-btn.config");
+const configSection = document.getElementById("configuracoes");
+const contentWrapper = document.querySelector(".content");
+
+// Seleciona o wrapper do header (que contém os botões de filtro)
+const headerWrapper = document.querySelector(".header-wrapper");
+
+function setupConfigSection() {
+  if (!configSection) return;
+  if (configSection.dataset.inited) return; // já inicializado
+
+  // Limpa a seção para garantir que só criamos uma vez
+  configSection.innerHTML = '';
+
+  // --- 1. Título Principal ---
+  const title = document.createElement("h2");
+  title.textContent = "Configurações do Sistema";
+  title.className = "config-title";
+  configSection.appendChild(title);
+
+  // --- 2. NOVO: Wrapper para os Cards de Configuração (lado a lado e centralizado) ---
+  const cardsWrapper = document.createElement("div");
+  cardsWrapper.className = "config-cards-wrapper";
+  configSection.appendChild(cardsWrapper); // Adiciona o wrapper à seção
+
+  // --- 3. Card de Status (Adicionado ao Novo Wrapper) ---
+  const statusCard = document.createElement("div");
+  statusCard.className = "config-card";
+
+  const subTitle = document.createElement("h2");
+  subTitle.textContent = "Status de Conexão com o Banco de Dados";
+  statusCard.appendChild(subTitle);
+
+  // cria área de status do banco
+  const statusWrapper = document.createElement("div");
+  statusWrapper.className = "config-status-wrapper";
+
+  const label = document.createElement("p");
+  label.innerHTML = 'Status da conexão: <strong id="status-banco" class="status-indicator">Desconhecido</strong>';
+
+  const details = document.createElement("div");
+  details.innerHTML = `
+    <p>Host: <strong>localhost</strong></p>
+    <p>Porta: <strong>3306</strong></p>
+    <p>Banco: <strong>chefmaster_db</strong></p>
+  `;
+
+  const btnTest = document.createElement("button");
+  btnTest.textContent = "Testar Conexão";
+  btnTest.className = "btn testar";
+    
+  statusWrapper.appendChild(label);
+  statusWrapper.appendChild(details);
+  statusWrapper.appendChild(btnTest);
+
+  statusCard.appendChild(statusWrapper); 
+  cardsWrapper.appendChild(statusCard); // Adiciona o card DENTRO do novo wrapper
+
+  // comportamento do botão testar (simulação)
+  btnTest.addEventListener("click", () => {
+    const statusEl = document.getElementById("status-banco");
+    if (!statusEl) return;
+    
+    // Limpa classes e aplica 'testando'
+    statusEl.classList.remove("online", "offline");
+    statusEl.classList.add("testando");
+    
+    statusEl.textContent = "Testando...";
+
+    setTimeout(() => {
+      const conectado = Math.random() > 0.25; // 75% chance online (simulação)
+      
+      // Remove a classe 'testando'
+      statusEl.classList.remove("testando");
+
+      if (conectado) {
+        statusEl.textContent = "Online";
+        statusEl.classList.add("online");
+      } else {
+        statusEl.textContent = "Offline";
+        statusEl.classList.add("offline");
+      }
+    }, 700);
+  });
+
+  configSection.dataset.inited = "1";
+}
+
+if (btnMenuPedidos) {
+  btnMenuPedidos.addEventListener("click", () => {
+    // Mostrar pedidos
+    if (contentWrapper) contentWrapper.style.display = "block";
+    if (configSection) configSection.style.display = "none";
+    // CORREÇÃO: Mostrar o header de filtros
+    if (headerWrapper) headerWrapper.style.display = "flex"; 
+    toggleMenu(false);
+    renderPedidos();
+  });
+}
+
+if (btnMenuConfig) {
+  btnMenuConfig.addEventListener("click", () => {
+    // Mostrar configurações
+    if (contentWrapper) contentWrapper.style.display = "none";
+    if (configSection) configSection.style.display = "flex"; // Usa flex para centralizar
+    // CORREÇÃO: Ocultar o header de filtros
+    if (headerWrapper) headerWrapper.style.display = "none";
+    setupConfigSection();
+    toggleMenu(false);
+  });
+}
+
+// garante estado inicial correto (após DOMContentLoaded)
+document.addEventListener('DOMContentLoaded', () => {
+    if (configSection) configSection.style.display = "none";
+    if (contentWrapper) contentWrapper.style.display = "block";
+    // Garante que o header está visível ao iniciar na tela de Pedidos
+    if (headerWrapper) headerWrapper.style.display = "flex";
+});
+
+// ====================== BOTÃO SAIR (LOGIN INEXISTENTE) ======================
+const btnSair = document.querySelector(".menu-btn.sair");
+if (btnSair) {
+  btnSair.addEventListener("click", () => {
+    toggleMenu(false);
+    window.location.href = "/login"; 
+  });
+}
