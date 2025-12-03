@@ -1,4 +1,4 @@
-// ====================== LISTA DE PEDIDOS (REVISADA COM OBSERVAÇÃO) ======================
+// ====================== LISTA DE PEDIDOS ======================
 const pedidos = [
   { mesa: 1, cliente: "Ricardo", tempoSegundos: 0, tempoEstimado: 35, status: "Aguardando", prioridade: "Normal", produtos: [
     { nome: "PIZZA CORAÇÃO GRANDE", observacao: "Massa bem fina e sem azeitonas", pronto: false, bebida: false },
@@ -47,41 +47,36 @@ const pedidos = [
 let mesaFiltro = null;
 let prioridadeFiltro = null;
 
-// ====================== DADOS DE CONEXÃO DO BANCO (NOVOS) ======================
+// ====================== DADOS DE CONEXÃO DO BANCO ======================
 let ultimaAtualizacaoDB = "N/A";
 let ultimoErroDB = "Nenhum erro conhecido.";
 
 // ====================== CONSTANTES DE URGÊNCIA ======================
-const AGUARDANDO_URG_SECONDS = 60 * 5; // 5 minutos
+const AGUARDANDO_URG_SECONDS = 60; // 1 minuto
 const PREPARO_URG_SECONDS = 60 * 20; // 20 minutos
 
-// ====================== FUNÇÃO MODAL CUSTOMIZADO (AJUSTADA) ======================
+// ====================== FUNÇÃO MODAL CUSTOMIZADO ======================
 function showCustomModal(title, message, showConfirm, callback) {
   const modal = document.getElementById("modal-confirmacao");
   if (!modal) return;
 
-  const titleEl = modal.querySelector(".modal-title"); // Adicione um H2 no HTML se não tiver
   const messageEl = modal.querySelector(".modal-text");
   const confirmarBtn = modal.querySelector("#confirmar-cancelar");
   const fecharBtn = modal.querySelector("#fechar-modal");
   
-  // Se o título não existir, o JS adiciona (embora o HTML original não tivesse)
   if (messageEl) messageEl.textContent = message;
 
-  // Mostra ou esconde o botão de confirmação
   if (confirmarBtn) {
     if (showConfirm) {
       confirmarBtn.style.display = "inline-block";
     } else {
       confirmarBtn.style.display = "none";
-      // Se não há confirmação, centraliza o botão de fechar/voltar
       if(fecharBtn) fecharBtn.textContent = "Entendido";
     }
   }
 
   modal.style.display = "flex";
   
-  // Define o texto do botão de fechar como 'Não, voltar' se houver confirmação
   if(fecharBtn && showConfirm) fecharBtn.textContent = "Não, voltar";
 
   function cleanup() {
@@ -100,7 +95,6 @@ function showCustomModal(title, message, showConfirm, callback) {
     callback(false);
   }
 
-  // Garante que os listeners sejam adicionados apenas se existirem
   if (confirmarBtn && showConfirm) confirmarBtn.addEventListener("click", onConfirm);
   if (fecharBtn) fecharBtn.addEventListener("click", onCancel);
 }
@@ -109,10 +103,9 @@ function showCustomModal(title, message, showConfirm, callback) {
 function togglePronto(indexPedido, indexProduto) {
   const pedido = pedidos[indexPedido];
   if (!pedido) return;
-  // Só permite marcar/desmarcar se o pedido não estiver FINALIZADO
+  
   if (pedido.status === "Finalizado") return; 
   
-  // Impede a marcação se o status for Aguardando
   if (pedido.status === "Aguardando") {
       showCustomModal("Atenção", "O pedido deve estar 'Em preparo' para marcar os itens.", false, () => {});
       return;
@@ -144,7 +137,7 @@ function atualizarContagemBotoes() {
   if (todosEl) todosEl.textContent = `Todos (${pedidos.length})`;
 }
 
-// ====================== RENDER PEDIDOS (ATUALIZADA) ======================
+// ====================== RENDER PEDIDOS ======================
 function renderPedidos() {
   const container = document.getElementById("pedidos-container");
   if (!container) return;
@@ -160,18 +153,12 @@ function renderPedidos() {
   });
 
   if (statusFiltro === "Todos") {
-    // Prioriza Urgente dentro de Aguardando/Preparo, depois a ordem padrão
     pedidosFiltrados.sort((a, b) => {
         const ordemStatus = { "Aguardando": 0, "Em preparo": 1, "Finalizado": 2 };
-        
-        // 1. Prioridade por Status
         const diffStatus = (ordemStatus[a.status] || 99) - (ordemStatus[b.status] || 99);
         if (diffStatus !== 0) return diffStatus;
-
-        // 2. Prioridade por Urgência (dentro do mesmo status)
         if (a.prioridade === "Urgente" && b.prioridade === "Normal") return -1;
         if (a.prioridade === "Normal" && b.prioridade === "Urgente") return 1;
-
         return 0;
     });
   }
@@ -200,33 +187,39 @@ function renderPedidos() {
 
     const produtosHTML = pedido.produtos.map(prod => {
       const classe = `item-pedido ${prod.pronto ? "pronto" : ""} ${prod.bebida ? "bebida" : ""}`;
-      
-      // Exibe a observação se ela existir
       const observacaoHTML = prod.observacao ? 
-          `<p class="nota-cliente">${prod.observacao}</p>` : 
+          `<div class="itens"><p class="nota-cliente">${prod.observacao}</p></div>` : 
           '';
 
       return `
         <div class="${classe}" onclick="togglePronto(${indexOriginal}, ${pedido.produtos.indexOf(prod)})">
           <strong>${prod.nome}</strong>
-          <div class="itens">${observacaoHTML}</div>
+          ${observacaoHTML}
         </div>
       `;
     }).join("");
 
+    // ESTRUTURA COMPATÍVEL COM O FLEXBOX FIXO DO CSS
     card.innerHTML = `
       <div class="card-header">
         <span>Mesa ${pedido.mesa} - ${pedido.cliente}</span>
         <span class="tempo">${tempoMin.toString().padStart(2,"0")}:${tempoSec.toString().padStart(2,"0")}</span>
       </div>
-      <div class="card-content">${produtosHTML}</div>
-      ${gerarBotoes(pedido, indexOriginal)}
+      
+      <div class="card-content">
+        ${produtosHTML}
+      </div>
+      
+      <div class="actions-wrapper">
+        ${gerarBotoes(pedido, indexOriginal)}
+      </div>
     `;
 
     container.appendChild(card);
   });
 
   atualizarContagemBotoes();
+  // Garante scroll se necessário
   setTimeout(atualizarScrollCards, 50);
 }
 
@@ -254,11 +247,9 @@ function preparar(i) {
   if (!pedidos[i]) return;
   pedidos[i].status = "Em preparo";
   pedidos[i].prioridade = "Normal";
-  pedidos[i].tempoSegundos = 0; // Zera o tempo ao iniciar o preparo
-
+  pedidos[i].tempoSegundos = 0; 
   const card = document.querySelector(`.card-pedido[data-index='${i}']`);
   if (card) card.classList.remove("urgente");
-
   renderPedidos();
 }
 
@@ -273,39 +264,39 @@ function cancelar(i) {
 }
 
 function voltarEtapa(i) {
-  if (!pedidos[i]) return;
-  
-  // Zera a marcação de itens prontos ao voltar de etapa
-  pedidos[i].produtos.forEach(p => p.pronto = false);
-
-  pedidos[i].status =
-    pedidos[i].status === "Finalizado" ? "Em preparo" : "Aguardando";
-    
-  // Zera o tempo se retornar para Aguardando ou Preparo
-  pedidos[i].tempoSegundos = 0;
-
-  renderPedidos();
+  if (!pedidos[i]) return;
+  const pedido = pedidos[i];
+  
+  // 1. Verifica o status ANTES de mudar a etapa
+  const estavaFinalizado = pedido.status === "Finalizado";
+  
+  // 2. Define o NOVO status
+  if (estavaFinalizado) {
+    pedido.status = "Em preparo";
+    // Se estava finalizado e volta para preparo, os itens prontos continuam prontos.
+    // Portanto, NÃO chamamos o loop para desmarcar.
+  } else {
+    // Se está voltando de 'Em preparo' para 'Aguardando', aí sim, desmarca tudo.
+    pedido.status = "Aguardando";
+    pedido.produtos.forEach(p => p.pronto = false);
+  }
+  
+  pedido.tempoSegundos = 0;
+  renderPedidos();
 }
 
-// ====================== FUNÇÃO FINALIZAR (COM NOVA REGRA) ======================
 function finalizar(i) {
   if (!pedidos[i]) return;
   const pedido = pedidos[i];
-
-  // Regra de Negócio: O pedido só é finalizado se todos os produtos estiverem prontos
   const todosItensProntos = pedido.produtos.every(prod => prod.pronto);
-
   if (todosItensProntos) {
-    // AÇÃO DE SUCESSO
     pedido.status = "Finalizado";
     pedido.prioridade = "Normal";
     renderPedidos();
   } else {
-    // AÇÃO DE ERRO
     showCustomModal("Atenção", "Para finalizar, todos os itens do pedido devem ser marcados como prontos.", false, (confirmed) => {});
   }
 }
-// =================================================================================
 
 function entregar(i) {
   if (!pedidos[i]) return;
@@ -316,10 +307,8 @@ function entregar(i) {
 // ====================== TIMER ======================
 setInterval(() => {
   pedidos.forEach((p, index) => {
-
     if (p.status !== "Finalizado") p.tempoSegundos++;
 
-    // Lógica de Urgência
     let novaPrioridade = "Normal";
 
     if (p.status === "Aguardando" && p.tempoSegundos >= AGUARDANDO_URG_SECONDS) {
@@ -330,11 +319,9 @@ setInterval(() => {
 
     if (novaPrioridade !== p.prioridade) {
         p.prioridade = novaPrioridade;
-        // Chama renderPedidos() apenas quando a prioridade mudar para reordenar/atualizar
         renderPedidos();
     }
 
-    // Atualiza o tempo no DOM (evita re-renderizar a lista inteira a cada segundo)
     const card = document.querySelector(`.card-pedido[data-index='${index}']`);
     if (card) {
       const tempoSpan = card.querySelector(".tempo");
@@ -344,7 +331,6 @@ setInterval(() => {
         tempoSpan.textContent = `${minutos}:${segundos}`;
       }
       
-      // Atualiza a classe urgente no card se ela foi mudada
       if (p.prioridade === "Urgente" && !card.classList.contains("urgente")) {
           card.classList.add("urgente");
       } else if (p.prioridade === "Normal" && card.classList.contains("urgente")) {
@@ -363,8 +349,9 @@ const menuClose = document.getElementById("menu-close");
 if (menuClose) {
   menuClose.addEventListener("click", () => toggleMenu(false));
 }
-
-overlay.addEventListener("click", () => toggleMenu(false));
+if(overlay) {
+    overlay.addEventListener("click", () => toggleMenu(false));
+}
 
 function toggleMenu(open) {
   if (open) {
@@ -378,11 +365,13 @@ function toggleMenu(open) {
   }
 }
 
-menuToggle.addEventListener("click", () => {
-  toggleMenu(!sidebar.classList.contains("active"));
-});
-menuClose.addEventListener("click", () => toggleMenu(false));
-overlay.addEventListener("click", () => toggleMenu(false));
+if(menuToggle) {
+    menuToggle.addEventListener("click", () => {
+    toggleMenu(!sidebar.classList.contains("active"));
+    });
+}
+if(menuClose) menuClose.addEventListener("click", () => toggleMenu(false));
+
 
 // ====================== FILTROS ======================
 document.querySelectorAll(".status-btn").forEach(btn => {
@@ -393,31 +382,43 @@ document.querySelectorAll(".status-btn").forEach(btn => {
   });
 });
 
-// ====================== DROPDOWNS ======================
+// ====================== DROPDOWNS E SELEÇÃO ======================
 document.addEventListener("DOMContentLoaded", () => {
-
-  const dropdownMesas = document.getElementById("dropdown-mesas-content");
+  // ATENÇÃO: IDs ajustados para bater com o HTML original
+  const dropdownMesasContent = document.getElementById("dropdown-mesas-content");
   const btnMesas = document.getElementById("dropdown-mesas");
+  const dropdownPrioridadeContent = document.getElementById("dropdown-prioridade-content");
+  const btnPrioridade = document.getElementById("dropdown-prioridade");
 
-  if (dropdownMesas && btnMesas) {
-    dropdownMesas.innerHTML = "";
+  // === INICIALIZAÇÃO MESAS ===
+  if (dropdownMesasContent && btnMesas) {
+    dropdownMesasContent.innerHTML = "";
+    
+    // Botão Todas (Selecionado por padrão)
     const todas = document.createElement("button");
     todas.textContent = "Todas";
     todas.dataset.mesa = "todas";
-    dropdownMesas.appendChild(todas);
+    todas.classList.add("selected"); 
+    dropdownMesasContent.appendChild(todas);
 
-    // Gera botões para 10 mesas
     for (let m = 1; m <= 10; m++) {
       const b = document.createElement("button");
       b.textContent = `Mesa ${m}`;
       b.dataset.mesa = m;
-      dropdownMesas.appendChild(b);
+      dropdownMesasContent.appendChild(b);
     }
 
-    dropdownMesas.addEventListener("click", (e) => {
+    // Evento de clique unificado para seleção
+    dropdownMesasContent.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (!b) return;
 
+      // 1. Remove .selected de todos os botões deste dropdown
+      dropdownMesasContent.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
+      // 2. Adiciona .selected ao clicado
+      b.classList.add("selected");
+
+      // 3. Lógica do filtro
       if (b.dataset.mesa === "todas") {
         mesaFiltro = null;
         btnMesas.textContent = "Mesas";
@@ -426,53 +427,56 @@ document.addEventListener("DOMContentLoaded", () => {
         btnMesas.textContent = b.textContent;
       }
 
-      // Fechar dropdown e renderizar
-      dropdownMesas.style.display = "none";
+      dropdownMesasContent.style.display = "none";
       btnMesas.classList.remove("active-dropdown");
-
       renderPedidos();
     });
   }
 
-  const dpP = document.getElementById("dropdown-prioridade-content");
-  const dpBtn = document.getElementById("dropdown-prioridade");
-
-  if (dpP && dpBtn) {
-    dpP.innerHTML = "";
-
+  // === INICIALIZAÇÃO PRIORIDADES ===
+  if (dropdownPrioridadeContent && btnPrioridade) {
+    dropdownPrioridadeContent.innerHTML = "";
+    
+    // Botão Todos (Selecionado por padrão)
     const pt = document.createElement("button");
     pt.textContent = "Todos";
     pt.dataset.prioridade = "todas";
-    dpP.appendChild(pt);
+    pt.classList.add("selected");
+    dropdownPrioridadeContent.appendChild(pt);
 
     ["Urgente", "Normal"].forEach(pr => {
       const b = document.createElement("button");
       b.textContent = pr;
       b.dataset.prioridade = pr;
-      dpP.appendChild(b);
+      dropdownPrioridadeContent.appendChild(b);
     });
 
-    dpP.addEventListener("click", (e) => {
+    // Evento de clique unificado para seleção
+    dropdownPrioridadeContent.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (!b) return;
 
+      // 1. Remove .selected de todos
+      dropdownPrioridadeContent.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
+      // 2. Adiciona .selected
+      b.classList.add("selected");
+
+      // 3. Lógica do filtro
       if (b.dataset.prioridade === "todas") {
         prioridadeFiltro = null;
-        dpBtn.textContent = "Prioridade";
+        btnPrioridade.textContent = "Prioridades";
       } else {
         prioridadeFiltro = b.dataset.prioridade;
-        dpBtn.textContent = b.dataset.prioridade;
+        btnPrioridade.textContent = b.dataset.prioridade;
       }
 
-      // Fechar dropdown e renderizar
-      dpP.style.display = "none";
-      dpBtn.classList.remove("active-dropdown");
-
+      dropdownPrioridadeContent.style.display = "none";
+      btnPrioridade.classList.remove("active-dropdown");
       renderPedidos();
     });
   }
 
-  // Lógica de Abertura/Fechamento de Dropdown
+  // === LÓGICA DE ABRIR/FECHAR DROPDOWNS ===
   document.querySelectorAll(".dropdown-wrapper").forEach(wrapper => {
     const btn = wrapper.querySelector(".dropdown-btn");
     const content = wrapper.querySelector(".dropdown-content");
@@ -480,7 +484,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-
       // Fecha outros dropdowns
       document.querySelectorAll(".dropdown-content").forEach(c => {
         if (c !== content) c.style.display = "none";
@@ -488,7 +491,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".dropdown-btn").forEach(b => b.classList.remove("active-dropdown"));
 
       const aberto = content.style.display === "flex";
-
       if (!aberto) {
         content.style.display = "flex";
         btn.classList.add("active-dropdown");
@@ -498,30 +500,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Fecha dropdowns ao clicar fora
   document.addEventListener("click", () => {
     document.querySelectorAll(".dropdown-content").forEach(c => c.style.display = "none");
     document.querySelectorAll(".dropdown-btn").forEach(b => b.classList.remove("active-dropdown"));
   });
 });
 
-// ====================== SCROLL (Para aparecer barra de rolagem se houver muitos itens) ======================
+// ====================== SCROLL ======================
 function atualizarScrollCards() {
   const cards = document.querySelectorAll('.card-content');
-
   cards.forEach(card => {
-    card.style.overflowY = 'hidden';
-    
-    // Simplifica a lógica de scroll
-    const precisaScroll = card.scrollHeight > card.clientHeight + 1;
-    
+    // Com display flex no HTML corrigido, o scroll automático do CSS deve funcionar.
+    // Esta função é apenas um fallback.
+    const precisaScroll = card.scrollHeight > card.clientHeight;
     card.style.overflowY = precisaScroll ? 'auto' : 'hidden';
   });
 }
 
 window.addEventListener('resize', atualizarScrollCards);
 
-// Usa MutationObserver para detectar quando um card é adicionado ou atualizado
 const scrollObserver = new MutationObserver(() => {
   requestAnimationFrame(atualizarScrollCards);
 });
@@ -535,10 +532,10 @@ if (pedidosContainerEl) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(atualizarScrollCards, 50);
+    setTimeout(atualizarScrollCards, 50);
 });
 
-// ====================== ADIÇÕES: TELA CONFIGURAÇÕES E NAVEGAÇÃO ======================
+// ====================== NAVEGAÇÃO E CONFIGURAÇÕES ======================
 
 const btnMenuPedidos = document.querySelector(".menu-btn.pedidos");
 const btnMenuConfig = document.querySelector(".menu-btn.config");
@@ -546,7 +543,6 @@ const configSection = document.getElementById("configuracoes");
 const contentWrapper = document.querySelector(".content");
 const headerWrapper = document.querySelector(".header-wrapper");
 
-// Função para atualizar o DOM com os dados de conexão
 function updateConfigDisplay(status) {
     const statusEl = document.getElementById("status-banco");
     const updateEl = document.getElementById("last-update");
@@ -555,21 +551,17 @@ function updateConfigDisplay(status) {
     if (statusEl) {
         statusEl.classList.remove("online", "offline", "testando");
         statusEl.textContent = status;
-
         if (status === "Online") statusEl.classList.add("online");
         if (status === "Offline") statusEl.classList.add("offline");
         if (status === "Testando...") statusEl.classList.add("testando");
     }
-
     if (updateEl) updateEl.textContent = ultimaAtualizacaoDB;
     if (errorEl) errorEl.textContent = ultimoErroDB;
 }
 
-// FUNÇÃO setupConfigSection() REVISADA PARA MELHOR ESTRUTURA
 function setupConfigSection() {
     if (!configSection) return;
     if (configSection.dataset.inited) {
-        // Se já inicializado, apenas atualiza os dados
         updateConfigDisplay(document.getElementById("status-banco")?.textContent || "Desconhecido");
         return;
     }
@@ -595,34 +587,29 @@ function setupConfigSection() {
     const statusWrapper = document.createElement("div");
     statusWrapper.className = "config-status-wrapper";
 
-    // Informação do Status e indicadores
     const label = document.createElement("p");
     label.innerHTML = 'Status da conexão: <strong id="status-banco" class="status-indicator">Desconhecido</strong>';
 
-    // Detalhes da Conexão usando UL/LI (MAIS ESTRUTURADO)
     const details = document.createElement("ul");
-    details.className = "details-list"; // Classe CSS para a lista
+    details.className = "details-list";
     details.innerHTML = `
         <li>Host: <strong>localhost</strong></li>
         <li>Porta: <strong>3306</strong></li>
         <li>Banco: <strong>chefmaster_db</strong></li>
     `;
     
-    // CAMPO: Última Atualização
     const updateInfo = document.createElement("p");
     updateInfo.innerHTML = 'Última Atualização: <strong id="last-update">N/A</strong>';
 
-    // CAMPO: Último Erro
     const errorInfo = document.createElement("p");
     errorInfo.innerHTML = 'Último Erro: <strong id="last-error">Nenhum erro conhecido.</strong>';
-
 
     const btnTest = document.createElement("button");
     btnTest.textContent = "Testar Conexão";
     btnTest.className = "btn testar";
 
     statusWrapper.appendChild(label);
-    statusWrapper.appendChild(details); // Adiciona a lista (ul)
+    statusWrapper.appendChild(details); 
     statusWrapper.appendChild(updateInfo); 
     statusWrapper.appendChild(errorInfo); 
     statusWrapper.appendChild(btnTest);
@@ -630,18 +617,14 @@ function setupConfigSection() {
     statusCard.appendChild(statusWrapper);
     cardsWrapper.appendChild(statusCard);
 
-    // Comportamento do botão testar (simulação)
     btnTest.addEventListener("click", () => {
-        
-        ultimaAtualizacaoDB = "Testando..."; // Atualiza a variável global
+        ultimaAtualizacaoDB = "Testando..."; 
         updateConfigDisplay("Testando...");
 
         setTimeout(() => {
             const conectado = Math.random() > 0.25; 
             const agora = new Date().toLocaleString();
-
             ultimaAtualizacaoDB = agora;
-
             if (conectado) {
                 ultimoErroDB = "Nenhum.";
                 updateConfigDisplay("Online");
@@ -652,12 +635,9 @@ function setupConfigSection() {
         }, 700);
     });
 
-    // Atualiza os dados iniciais após a criação dos elementos (N/A)
     updateConfigDisplay("Desconhecido"); 
-    
     configSection.dataset.inited = "1";
 }
-
 
 if (btnMenuPedidos) {
   btnMenuPedidos.addEventListener("click", () => {
@@ -679,26 +659,20 @@ if (btnMenuConfig) {
   });
 }
 
-// Garante estado inicial correto (após DOMContentLoaded)
 document.addEventListener('DOMContentLoaded', () => {
     if (configSection) configSection.style.display = "none";
     if (contentWrapper) contentWrapper.style.display = "block";
     if (headerWrapper) headerWrapper.style.display = "flex";
 });
 
-// ====================== BOTÃO SAIR (LOGIN INEXISTENTE) ======================
 const btnSair = document.querySelector(".menu-btn.sair");
 if (btnSair) {
   btnSair.addEventListener("click", () => {
     toggleMenu(false);
     showCustomModal("Sair", "Encerrando sessão...", false, () => {
-        // Simula o redirecionamento para a tela de login
-        console.log("Sessão encerrada. Redirecionando para /login");
-        // window.location.href = "/login"; 
+        console.log("Sessão encerrada.");
     });
   });
 }
 
-// ====================== RENDER INICIAL ======================
-// Chama a função renderPedidos para carregar a interface
 renderPedidos();
