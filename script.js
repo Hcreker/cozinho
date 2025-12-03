@@ -49,7 +49,7 @@ let prioridadeFiltro = null;
 
 // ====================== DADOS DE CONEXÃO DO BANCO ======================
 let ultimaAtualizacaoDB = "N/A";
-let ultimoErroDB = "Nenhum erro conhecido.";
+let ultimoErroDB = "Nenhum erro registrado.";
 
 // ====================== CONSTANTES DE URGÊNCIA ======================
 const AGUARDANDO_URG_SECONDS = 60; // 1 minuto
@@ -199,7 +199,6 @@ function renderPedidos() {
       `;
     }).join("");
 
-    // ESTRUTURA COMPATÍVEL COM O FLEXBOX FIXO DO CSS
     card.innerHTML = `
       <div class="card-header">
         <span>Mesa ${pedido.mesa} - ${pedido.cliente}</span>
@@ -219,8 +218,6 @@ function renderPedidos() {
   });
 
   atualizarContagemBotoes();
-  // Garante scroll se necessário
-  setTimeout(atualizarScrollCards, 50);
 }
 
 // ====================== BOTÕES ======================
@@ -264,25 +261,17 @@ function cancelar(i) {
 }
 
 function voltarEtapa(i) {
-  if (!pedidos[i]) return;
-  const pedido = pedidos[i];
-  
-  // 1. Verifica o status ANTES de mudar a etapa
-  const estavaFinalizado = pedido.status === "Finalizado";
-  
-  // 2. Define o NOVO status
-  if (estavaFinalizado) {
-    pedido.status = "Em preparo";
-    // Se estava finalizado e volta para preparo, os itens prontos continuam prontos.
-    // Portanto, NÃO chamamos o loop para desmarcar.
-  } else {
-    // Se está voltando de 'Em preparo' para 'Aguardando', aí sim, desmarca tudo.
-    pedido.status = "Aguardando";
-    pedido.produtos.forEach(p => p.pronto = false);
-  }
-  
-  pedido.tempoSegundos = 0;
-  renderPedidos();
+  if (!pedidos[i]) return;
+  const pedido = pedidos[i];
+  const estavaFinalizado = pedido.status === "Finalizado";
+  if (estavaFinalizado) {
+    pedido.status = "Em preparo";
+  } else {
+    pedido.status = "Aguardando";
+    pedido.produtos.forEach(p => p.pronto = false);
+  }
+  pedido.tempoSegundos = 0;
+  renderPedidos();
 }
 
 function finalizar(i) {
@@ -330,7 +319,6 @@ setInterval(() => {
         const segundos = (p.tempoSegundos % 60).toString().padStart(2, "0");
         tempoSpan.textContent = `${minutos}:${segundos}`;
       }
-      
       if (p.prioridade === "Urgente" && !card.classList.contains("urgente")) {
           card.classList.add("urgente");
       } else if (p.prioridade === "Normal" && card.classList.contains("urgente")) {
@@ -384,7 +372,6 @@ document.querySelectorAll(".status-btn").forEach(btn => {
 
 // ====================== DROPDOWNS E SELEÇÃO ======================
 document.addEventListener("DOMContentLoaded", () => {
-  // ATENÇÃO: IDs ajustados para bater com o HTML original
   const dropdownMesasContent = document.getElementById("dropdown-mesas-content");
   const btnMesas = document.getElementById("dropdown-mesas");
   const dropdownPrioridadeContent = document.getElementById("dropdown-prioridade-content");
@@ -394,7 +381,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (dropdownMesasContent && btnMesas) {
     dropdownMesasContent.innerHTML = "";
     
-    // Botão Todas (Selecionado por padrão)
     const todas = document.createElement("button");
     todas.textContent = "Todas";
     todas.dataset.mesa = "todas";
@@ -408,17 +394,13 @@ document.addEventListener("DOMContentLoaded", () => {
       dropdownMesasContent.appendChild(b);
     }
 
-    // Evento de clique unificado para seleção
     dropdownMesasContent.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (!b) return;
 
-      // 1. Remove .selected de todos os botões deste dropdown
       dropdownMesasContent.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
-      // 2. Adiciona .selected ao clicado
       b.classList.add("selected");
 
-      // 3. Lógica do filtro
       if (b.dataset.mesa === "todas") {
         mesaFiltro = null;
         btnMesas.textContent = "Mesas";
@@ -437,7 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (dropdownPrioridadeContent && btnPrioridade) {
     dropdownPrioridadeContent.innerHTML = "";
     
-    // Botão Todos (Selecionado por padrão)
     const pt = document.createElement("button");
     pt.textContent = "Todos";
     pt.dataset.prioridade = "todas";
@@ -451,17 +432,13 @@ document.addEventListener("DOMContentLoaded", () => {
       dropdownPrioridadeContent.appendChild(b);
     });
 
-    // Evento de clique unificado para seleção
     dropdownPrioridadeContent.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (!b) return;
 
-      // 1. Remove .selected de todos
       dropdownPrioridadeContent.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
-      // 2. Adiciona .selected
       b.classList.add("selected");
 
-      // 3. Lógica do filtro
       if (b.dataset.prioridade === "todas") {
         prioridadeFiltro = null;
         btnPrioridade.textContent = "Prioridades";
@@ -484,7 +461,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      // Fecha outros dropdowns
       document.querySelectorAll(".dropdown-content").forEach(c => {
         if (c !== content) c.style.display = "none";
       });
@@ -506,42 +482,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ====================== SCROLL ======================
-function atualizarScrollCards() {
-  const cards = document.querySelectorAll('.card-content');
-  cards.forEach(card => {
-    // Com display flex no HTML corrigido, o scroll automático do CSS deve funcionar.
-    // Esta função é apenas um fallback.
-    const precisaScroll = card.scrollHeight > card.clientHeight;
-    card.style.overflowY = precisaScroll ? 'auto' : 'hidden';
-  });
-}
-
-window.addEventListener('resize', atualizarScrollCards);
-
-const scrollObserver = new MutationObserver(() => {
-  requestAnimationFrame(atualizarScrollCards);
-});
-
-const pedidosContainerEl = document.getElementById('pedidos-container');
-if (pedidosContainerEl) {
-  scrollObserver.observe(pedidosContainerEl, {
-    childList: true,
-    subtree: true
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(atualizarScrollCards, 50);
-});
-
 // ====================== NAVEGAÇÃO E CONFIGURAÇÕES ======================
 
 const btnMenuPedidos = document.querySelector(".menu-btn.pedidos");
 const btnMenuConfig = document.querySelector(".menu-btn.config");
+const btnMenuSair = document.querySelector(".menu-btn.sair"); 
 const configSection = document.getElementById("configuracoes");
 const contentWrapper = document.querySelector(".content");
 const headerWrapper = document.querySelector(".header-wrapper");
+
+function setActiveMenuButton(activeButton) {
+    const allMenuBtns = [btnMenuPedidos, btnMenuConfig, btnMenuSair];
+    allMenuBtns.forEach(btn => {
+        if (btn) btn.classList.remove("active-menu-btn");
+    });
+    if (activeButton) {
+        activeButton.classList.add("active-menu-btn");
+    }
+}
 
 function updateConfigDisplay(status) {
     const statusEl = document.getElementById("status-banco");
@@ -584,37 +542,52 @@ function setupConfigSection() {
     subTitle.textContent = "Status de Conexão com o Banco de Dados";
     statusCard.appendChild(subTitle);
 
-    const statusWrapper = document.createElement("div");
-    statusWrapper.className = "config-status-wrapper";
+    // ============================================
+    // CORREÇÃO: DIVIDIR EM DOIS WRAPPERS
+    // ============================================
 
-    const label = document.createElement("p");
-    label.innerHTML = 'Status da conexão: <strong id="status-banco" class="status-indicator">Desconhecido</strong>';
+    // 1. WRAPPER SUPERIOR (Status)
+    const statusWrapperTop = document.createElement("div");
+    statusWrapperTop.className = "config-status-wrapper";
+    
+    const statusP = document.createElement("p");
+    statusP.innerHTML = 'Status da conexão: <strong id="status-banco">Desconhecido</strong>';
+    statusWrapperTop.appendChild(statusP);
+    
+    statusCard.appendChild(statusWrapperTop);
 
+    // 2. LISTA DE DETALHES (Meio)
     const details = document.createElement("ul");
     details.className = "details-list";
     details.innerHTML = `
         <li>Host: <strong>localhost</strong></li>
         <li>Porta: <strong>3306</strong></li>
+        <li>Usuário: <strong>root</strong></li>
         <li>Banco: <strong>chefmaster_db</strong></li>
     `;
+    statusCard.appendChild(details);
+
+    // 3. WRAPPER INFERIOR (Update e Erro)
+    const statusWrapperBottom = document.createElement("div");
+    statusWrapperBottom.className = "config-status-wrapper";
+
+    const updateP = document.createElement("p");
+    updateP.innerHTML = 'Última Atualização: <strong id="last-update">N/A</strong>';
+
+    const errorP = document.createElement("p");
+    errorP.innerHTML = 'Último Erro: <strong id="last-error">Nenhum erro registrado.</strong>';
+
+    statusWrapperBottom.appendChild(updateP);
+    statusWrapperBottom.appendChild(errorP);
     
-    const updateInfo = document.createElement("p");
-    updateInfo.innerHTML = 'Última Atualização: <strong id="last-update">N/A</strong>';
+    statusCard.appendChild(statusWrapperBottom);
 
-    const errorInfo = document.createElement("p");
-    errorInfo.innerHTML = 'Último Erro: <strong id="last-error">Nenhum erro conhecido.</strong>';
-
+    // 4. BOTÃO (Fundo)
     const btnTest = document.createElement("button");
     btnTest.textContent = "Testar Conexão";
     btnTest.className = "btn testar";
+    statusCard.appendChild(btnTest);
 
-    statusWrapper.appendChild(label);
-    statusWrapper.appendChild(details); 
-    statusWrapper.appendChild(updateInfo); 
-    statusWrapper.appendChild(errorInfo); 
-    statusWrapper.appendChild(btnTest);
-
-    statusCard.appendChild(statusWrapper);
     cardsWrapper.appendChild(statusCard);
 
     btnTest.addEventListener("click", () => {
@@ -626,7 +599,7 @@ function setupConfigSection() {
             const agora = new Date().toLocaleString();
             ultimaAtualizacaoDB = agora;
             if (conectado) {
-                ultimoErroDB = "Nenhum.";
+                ultimoErroDB = "Nenhum erro registrado.";
                 updateConfigDisplay("Online");
             } else {
                 ultimoErroDB = `[${agora}] Timeout de conexão. Servidor não respondeu.`;
@@ -641,6 +614,7 @@ function setupConfigSection() {
 
 if (btnMenuPedidos) {
   btnMenuPedidos.addEventListener("click", () => {
+    setActiveMenuButton(btnMenuPedidos);
     if (contentWrapper) contentWrapper.style.display = "block";
     if (configSection) configSection.style.display = "none";
     if (headerWrapper) headerWrapper.style.display = "flex"; 
@@ -651,6 +625,7 @@ if (btnMenuPedidos) {
 
 if (btnMenuConfig) {
   btnMenuConfig.addEventListener("click", () => {
+    setActiveMenuButton(btnMenuConfig);
     if (contentWrapper) contentWrapper.style.display = "none";
     if (configSection) configSection.style.display = "flex"; 
     if (headerWrapper) headerWrapper.style.display = "none";
@@ -659,20 +634,22 @@ if (btnMenuConfig) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (configSection) configSection.style.display = "none";
-    if (contentWrapper) contentWrapper.style.display = "block";
-    if (headerWrapper) headerWrapper.style.display = "flex";
-});
-
-const btnSair = document.querySelector(".menu-btn.sair");
-if (btnSair) {
-  btnSair.addEventListener("click", () => {
+if (btnMenuSair) {
+  btnMenuSair.addEventListener("click", () => {
+    setActiveMenuButton(btnMenuSair);
     toggleMenu(false);
     showCustomModal("Sair", "Encerrando sessão...", false, () => {
         console.log("Sessão encerrada.");
     });
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (configSection) configSection.style.display = "none";
+    if (contentWrapper) contentWrapper.style.display = "block";
+    if (headerWrapper) headerWrapper.style.display = "flex";
+    
+    setActiveMenuButton(btnMenuPedidos); 
+});
 
 renderPedidos();

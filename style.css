@@ -355,20 +355,42 @@ body {
   box-shadow: 0 4px 12px rgba(248, 215, 123, 0.15);
 }
 
-.sidebar .menu-btn:hover,
-.sidebar .menu-btn.active {
+.sidebar .menu-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(248, 215, 123, 0.3);
 }
+
+/* 🏆 ESTADO ATIVO DO BOTÃO DO MENU (DESTAQUE AJUSTADO) 🏆 */
+.sidebar .menu-btn.active-menu-btn {
+  /* Efeito "pressionado" ou sólido */
+  transform: scale(1.05);
+  /* Fundo metálico/escuro, um pouco mais claro que a base */
+  background: linear-gradient(145deg, #2b2b2b, #1b1b1b);
+  /* Borda dourada forte */
+  border-color: #fde888;
+  /* Texto Dourado Claro */
+  color: #fff2ba;
+  /* Brilho Suave e Contido */
+  box-shadow: 0 0 10px rgba(248, 215, 123, 0.5), 
+              inset 0 0 10px rgba(255, 255, 255, 0.1); 
+}
+
+.sidebar .menu-btn.active-menu-btn:hover {
+  /* Mantém o transform e aumenta o brilho suavemente */
+  box-shadow: 0 0 15px rgba(248, 215, 123, 0.7), 
+              inset 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
 
 /* Botão Sair vermelho */
 .sidebar .menu-btn.sair {
   background: linear-gradient(145deg, #b02626, #d9534f);
   border-color: #ff4c4c;
   color: #fff;
+  margin-top: 2rem;
 }
 
-/* Botão Pedidos e Configurações */
+/* Botão Pedidos e Configurações (Base) */
 .sidebar .menu-btn.pedidos,
 .sidebar .menu-btn.config {
   background: linear-gradient(145deg, #1a1a1a, #222);
@@ -888,58 +910,55 @@ body {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  
-  padding: 0; 
-  
+
+  padding: 0;
+
   margin: 0;
-  white-space: nowrap; /* Garante que o rótulo fique na mesma linha, idealmente */
+  white-space: nowrap;
+  /* Garante que o rótulo fique na mesma linha, idealmente */
 }
 
 /* Estilo do indicador de status (AGORA FIXO E MAIS À ESQUERDA) */
 #status-banco,
-.status-indicator 
-{
+.status-indicator {
   font-weight: bold;
   font-size: 1.4rem;
   display: inline-flex;
   align-items: center;
-  
+
   /* ALTERAÇÃO: Largura fixa de 100px */
-  width: 100px; 
-  
+  width: 100px;
+
   /* ALTERAÇÃO: Alinhamento à esquerda */
-  text-align: left; 
-  
+  text-align: left;
+
   /* Cor padrão para o status "Desconhecido" */
-  color: #aaaaaa; 
+  color: #aaaaaa;
   text-shadow: 0 0 5px rgba(170, 170, 170, 0.5);
-  
+
   /* Remove o gap que era usado para a bolinha */
-  gap: 0; 
+  gap: 0;
   white-space: nowrap;
   margin-right: 110px;
 }
 
 /* Estilos de Cores (Mantemos as cores no texto do status) */
-#status-banco.online, 
-.status-indicator.online
-{
+#status-banco.online,
+.status-indicator.online {
   color: #5cb85c;
   text-shadow: 0 0 8px rgba(92, 184, 92, 0.8);
   margin-right: 110px;
 }
 
-#status-banco.offline, 
-.status-indicator.offline
-{
+#status-banco.offline,
+.status-indicator.offline {
   color: #d9534f;
   text-shadow: 0 0 8px rgba(217, 83, 79, 0.8);
   margin-right: 110px;
 }
 
 #status-banco.testando,
-.status-indicator.testando
-{
+.status-indicator.testando {
   color: #ffd651;
   text-shadow: 0 0 8px rgba(255, 214, 81, 0.8);
   margin-right: 110px;
@@ -984,9 +1003,9 @@ body {
 /* Estilo organizado para a mensagem de erro (Bloco alinhado na linha) */
 .config-status-wrapper>p strong#last-error {
   /* Alinhamento */
-  margin-top: 0; 
-  margin-left: 1rem; 
-  display: inline-flex; 
+  margin-top: 0;
+  margin-left: 1rem;
+  display: inline-flex;
 
   /* Estilo do bloco: Fundo levemente escuro e padding */
   background: #2a1c1c;
@@ -1032,10 +1051,10 @@ body {
     right: auto;
     top: 3.8rem;
   }
-  
+
   /* Fixa a largura do erro SÓ em desktop, onde há espaço */
   .config-status-wrapper>p strong#last-error {
-      width: 320px; 
+    width: 320px;
   }
 }
 
@@ -1090,10 +1109,10 @@ body {
     font-size: 1rem;
     padding: 0.8rem 1.2rem;
   }
-  
+
   /* Mantém a largura fixa em telas de tablet, se o espaço permitir */
   .config-status-wrapper>p strong#last-error {
-     width: 320px; 
+    width: 320px;
   }
 }
 
@@ -1154,14 +1173,14 @@ body {
   .config-status-wrapper>p {
     font-size: 1rem;
     /* Permite a quebra se não houver espaço */
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     white-space: normal;
   }
-  
+
   /* Largura fixa de 220px para telas de celular */
   .config-status-wrapper>p strong#last-error {
-     width: 220px; 
-     margin-left: 0;
-     margin-top: 0.5rem;
+    width: 220px;
+    margin-left: 0;
+    margin-top: 0.5rem;
   }
 }
